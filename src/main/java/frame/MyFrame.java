@@ -5,8 +5,8 @@ import constant.Constants;
 import javax.swing.*;
 import javax.swing.plaf.MenuBarUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.io.*;
 
 /**
  * 界面
@@ -16,23 +16,22 @@ import java.awt.event.ActionListener;
  * @Date 2020/1/14 10:47
  * @Version 1.0
  */
-public class MyFrame extends JPanel {
+public class MyFrame extends JFrame {
     private static MyFrame INSTANCE = new MyFrame();
     private MyFrame() throws HeadlessException {
-        JFrame jFrame = new JFrame("FileCompare");
+        this.setTitle("FileCompare");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize(); //获取系统窗口大小
-        jFrame.setSize(screenSize);  //设置界面大小
-        jFrame.setResizable(true);   //设置为可放大缩小
-        jFrame.setExtendedState(jFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH); //窗口最大化
+        this.setSize(screenSize);  //设置界面大小
+        this.setResizable(true);   //设置为可放大缩小
+        this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH); //窗口最大化
         Image imageIcon = toolkit.getImage("src/main/resources/images/title.gif");
-        jFrame.setIconImage(imageIcon);
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
-        jFrame.add(this);
-        this.setBackground(Color.decode(Constants.BACKGROUD_COLOR));  //设置窗口背景色
-        this.setForeground(Color.white);
-        addMenu(jFrame);
-        jFrame.setVisible(true);  //显示窗口
+        this.setIconImage(imageIcon);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
+        this.setSize(this.getWidth(),this.getHeight());
+//        this.setBackground(Color.decode(Constants.BACKGROUD_COLOR));  //设置窗口背景色
+        addMenu(this);
+        this.setVisible(true);  //显示窗口
     }
     /**   
      * 添加菜单栏
@@ -59,26 +58,89 @@ public class MyFrame extends JPanel {
         JMenuItem newFile = new JMenuItem("新建");
         JMenuItem openFile = new JMenuItem("打开");
         JMenuItem saveFile = new JMenuItem("保存");
-        JMenuItem exit = new JMenuItem("退出");
+        JMenuItem exitSystem = new JMenuItem("退出");
         newFile.setFont(font);
         openFile.setFont(font);
         saveFile.setFont(font);
-        exit.setFont(font);
+        exitSystem.setFont(font);
 
         fileMenu.add(newFile);
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
-        fileMenu.add(exit);
-        exit.addActionListener(new ActionListener() {
+        fileMenu.add(exitSystem);
+        exitSystem(jFrame,exitSystem); //退出系统
+        openFile(jFrame,openFile);     //打开文件
+        jFrame.setJMenuBar(jMenuBar);
+
+
+    }
+
+
+
+    /**
+     * 打开文件
+     * @Author lrh
+     * @Date 2020/1/14 15:34
+     * @Param [jFrame, jMenuItem]
+     * @Return void
+     */
+    private void openFile(final JFrame jFrame, final JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(jFrame, "确定退出？", "提示", JOptionPane.YES_NO_OPTION);
-                if(result == JOptionPane.YES_OPTION){
-                    System.exit(0);
-                }
+                JFileChooser jFileChooser = new JFileChooser();
+                if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {//
+                    File file = jFileChooser.getSelectedFile();
+                    // 创建文本区域组件
+                    JTextArea textArea = new JTextArea(20,20);
+                    textArea.setFont(new Font(null, Font.PLAIN, 18));   // 设置字体
+                    // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条从不显示
+                    JScrollPane scrollPane = new JScrollPane(
+                            textArea,
+                            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+                    );
+                    jFrame.add(scrollPane);
+                    updateUI(jFrame);
+                    readFile(file,textArea);
+                };
             }
         });
-        jFrame.setJMenuBar(jMenuBar);
     }
+    /**   
+     * 读取文件
+     * @Author lrh
+     * @Date 2020/1/14 19:33
+     * @Param [file]
+     * @Return void
+     */
+    private void readFile(File file,JTextArea jTextArea){
+        try {
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytes = new byte[4096];
+            int len = 0;
+            while((len = in.read(bytes))!=-1){
+                jTextArea.append(new String(bytes,0,len,"UTF-8"));
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null,"未找到文件");
+            e.printStackTrace();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,"打开文件失败");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * 动态添加组件后刷新组件
+     * @Author lrh
+     * @Date 2020/1/14 19:28
+     * @Param [component]
+     * @Return void
+     */
+    public static void updateUI(Component component){
+        SwingUtilities.updateComponentTreeUI(component);
+    }
+
     /**   
      * 退出，关闭窗口
      * @Author lrh
@@ -86,8 +148,15 @@ public class MyFrame extends JPanel {
      * @Param []
      * @Return void
      */
-    private void exit(){
-
+    private void exitSystem(final JFrame jFrame, JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int result = JOptionPane.showConfirmDialog(jFrame, "确定退出？", "提示", JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION){
+                    System.exit(0);
+                }
+            }
+        });
     }
     public static MyFrame getINSTANCE(){
         if(INSTANCE == null){
