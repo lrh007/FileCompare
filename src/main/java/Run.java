@@ -14,6 +14,7 @@ import java.awt.*;
 public class Run {
 
     public static void main(String[] args) {
+
         MyFrame frame = MyFrame.getINSTANCE();
         JLabel jLabel = new JLabel("测试");
         jLabel.setSize(100,200);
