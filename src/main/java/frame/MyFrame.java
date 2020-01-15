@@ -49,6 +49,7 @@ public class MyFrame extends JFrame {
      * @Return void
      */
     private void init(){
+        jTextArea.setFont(new Font(Constants.FONT_NAME, Font.PLAIN, Constants.FONT_SIZE));   // 设置字体
         jScrollPane.setRowHeaderView(new LineNumberHeaderView());
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -109,7 +110,6 @@ public class MyFrame extends JFrame {
                 JFileChooser jFileChooser = new JFileChooser();
                 if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
                     File file = jFileChooser.getSelectedFile();
-                    jTextArea.setFont(new Font(Constants.FONT_NAME, Font.PLAIN, Constants.FONT_SIZE));   // 设置字体
                     readFile(file);
                 };
             }
