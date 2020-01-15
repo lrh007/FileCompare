@@ -3,6 +3,8 @@ package frame;
 import constant.Constants;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.MenuBarUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -89,13 +91,33 @@ public class MyFrame extends JFrame {
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
         fileMenu.add(exitSystem);
-        exitSystem(jFrame,exitSystem); //退出系统
-        openFile(jFrame,openFile);     //打开文件
+        exitSystemListener(jFrame,exitSystem); //退出系统
+        openFileListener(jFrame,openFile);     //打开文件
         jFrame.setJMenuBar(jMenuBar);
-
+        jTextAreaListener(); //输入数据
     }
+    /**
+     * jTextArea事件监听
+     * @Author lrh
+     * @Date 2020/1/15 19:20
+     * @Param []
+     * @Return void
+     */
+    private void jTextAreaListener(){
+        jTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                System.out.println("输入数据");
+            }
 
+            public void removeUpdate(DocumentEvent e) {
+                System.out.println("删除数据");
+            }
 
+            public void changedUpdate(DocumentEvent e) {
+                System.out.println("更新数据");
+            }
+        });
+    }
 
     /**
      * 打开文件
@@ -104,7 +126,7 @@ public class MyFrame extends JFrame {
      * @Param [jFrame, jMenuItem]
      * @Return void
      */
-    private void openFile(final JFrame jFrame, final JMenuItem jMenuItem){
+    private void openFileListener(final JFrame jFrame, final JMenuItem jMenuItem){
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jFileChooser = new JFileChooser();
@@ -167,7 +189,7 @@ public class MyFrame extends JFrame {
      * @Param []
      * @Return void
      */
-    private void exitSystem(final JFrame jFrame, JMenuItem jMenuItem){
+    private void exitSystemListener(final JFrame jFrame, JMenuItem jMenuItem){
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int result = JOptionPane.showConfirmDialog(jFrame, "确定退出？", "提示", JOptionPane.YES_NO_OPTION);
