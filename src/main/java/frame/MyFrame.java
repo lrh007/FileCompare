@@ -152,9 +152,9 @@ public class MyFrame extends JFrame {
                 jTextArea.append(scanner.nextLine());
             }
             scanner.close();*/
-
+            jTextArea.setText(null);
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-            byte[] bytes = new byte[4096];
+            byte[] bytes = new byte[409600];
             int len = 0;
             while((len = in.read(bytes))!=-1){
                 jTextArea.append(new String(bytes,0,len,"UTF-8"));
