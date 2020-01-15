@@ -7,6 +7,7 @@ import javax.swing.plaf.MenuBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * 界面
@@ -17,7 +18,12 @@ import java.io.*;
  * @Version 1.0
  */
 public class MyFrame extends JFrame {
-    private static MyFrame INSTANCE = new MyFrame();
+    private static MyFrame INSTANCE;
+    // 创建文本区域组件
+    private  JTextArea jTextArea = new JTextArea();
+    // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条一直显示
+    private  JScrollPane jScrollPane = new JScrollPane();
+
     private MyFrame() throws HeadlessException {
         this.setTitle("FileCompare");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -29,9 +35,27 @@ public class MyFrame extends JFrame {
         this.setIconImage(imageIcon);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
         this.setSize(this.getWidth(),this.getHeight());
-//        this.setBackground(Color.decode(Constants.BACKGROUD_COLOR));  //设置窗口背景色
         addMenu(this);
+//        jScrollPane.add(jTextArea);
+//        this.add(jScrollPane);
+//        jTextArea.setBackground(Color.BLACK);
+        this.add(jTextArea);
+        init();
         this.setVisible(true);  //显示窗口
+
+    }
+    /**
+     * 初始化
+     * @Author lrh
+     * @Date 2020/1/15 13:08
+     * @Param []
+     * @Return void
+     */
+    private void init(){
+
+        jScrollPane.setRowHeaderView(new LineNumberHeaderView());
+        jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
     }
     /**   
      * 添加菜单栏
@@ -72,7 +96,6 @@ public class MyFrame extends JFrame {
         openFile(jFrame,openFile);     //打开文件
         jFrame.setJMenuBar(jMenuBar);
 
-
     }
 
 
@@ -88,20 +111,10 @@ public class MyFrame extends JFrame {
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jFileChooser = new JFileChooser();
-                if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {//
+                if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
                     File file = jFileChooser.getSelectedFile();
-                    // 创建文本区域组件
-                    JTextArea textArea = new JTextArea(20,20);
-                    textArea.setFont(new Font(null, Font.PLAIN, 18));   // 设置字体
-                    // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条从不显示
-                    JScrollPane scrollPane = new JScrollPane(
-                            textArea,
-                            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
-                    );
-                    jFrame.add(scrollPane);
-                    updateUI(jFrame);
-                    readFile(file,textArea);
+                    jTextArea.setFont(new Font(Constants.FONT_NAME, Font.PLAIN, Constants.FONT_SIZE));   // 设置字体
+                    readFile(file);
                 };
             }
         });
@@ -113,14 +126,24 @@ public class MyFrame extends JFrame {
      * @Param [file]
      * @Return void
      */
-    private void readFile(File file,JTextArea jTextArea){
+    private void readFile(File file){
         try {
+
+           /* Scanner scanner = new Scanner(file);
+            while(scanner.hasNext()){
+                jTextArea.append(scanner.nextLine());
+            }
+            scanner.close();*/
+
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
             byte[] bytes = new byte[4096];
             int len = 0;
             while((len = in.read(bytes))!=-1){
                 jTextArea.append(new String(bytes,0,len,"UTF-8"));
+                jTextArea.paintImmediately(jTextArea.getBounds());
             }
+            in.close();
+            System.out.println("一共："+jTextArea.getLineCount());
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,"未找到文件");
             e.printStackTrace();

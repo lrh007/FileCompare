@@ -1,8 +1,5 @@
 import frame.MyFrame;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * 主程序
  *
