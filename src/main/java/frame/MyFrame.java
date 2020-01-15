@@ -22,7 +22,7 @@ public class MyFrame extends JFrame {
     // 创建文本区域组件
     private  JTextArea jTextArea = new JTextArea();
     // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条一直显示
-    private  JScrollPane jScrollPane = new JScrollPane();
+    private  JScrollPane jScrollPane;
 
     private MyFrame() throws HeadlessException {
         this.setTitle("FileCompare");
@@ -36,13 +36,10 @@ public class MyFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
         this.setSize(this.getWidth(),this.getHeight());
         addMenu(this);
-//        jScrollPane.add(jTextArea);
-//        this.add(jScrollPane);
-//        jTextArea.setBackground(Color.BLACK);
-        this.add(jTextArea);
+        jScrollPane = new JScrollPane(jTextArea);
+        this.add(jScrollPane);
         init();
         this.setVisible(true);  //显示窗口
-
     }
     /**
      * 初始化
@@ -52,7 +49,6 @@ public class MyFrame extends JFrame {
      * @Return void
      */
     private void init(){
-
         jScrollPane.setRowHeaderView(new LineNumberHeaderView());
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
