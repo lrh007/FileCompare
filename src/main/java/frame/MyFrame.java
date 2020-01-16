@@ -110,80 +110,17 @@ public class MyFrame extends JFrame {
         fileMenu.add(saveFile);
         fileMenu.addSeparator(); //添加分割线
         fileMenu.add(exitSystem);
-        exitSystemListener(jFrame,exitSystem); //退出系统
-        openFileListener(jFrame,openFile);     //打开文件
         jFrame.setJMenuBar(jMenuBar);
-        jTextAreaListener(); //输入数据
-    }
-    /**
-     * jTextArea事件监听
-     * @Author lrh
-     * @Date 2020/1/15 19:20
-     * @Param []
-     * @Return void
-     */
-    private void jTextAreaListener(){
-        jTextArea.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                System.out.println("输入数据");
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                System.out.println("删除数据");
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                System.out.println("更新数据");
-            }
-        });
+        ComponentListener.exitSystemListener(jFrame,exitSystem);            //退出系统
+        ComponentListener.openFileListener(jFrame,openFile,jTextArea);      //打开文件
+        ComponentListener.jTextAreaListener(jTextArea);                     //输入数据
+        ComponentListener.newFileListener(jFrame,newFile,jTextArea);        //新建文件
     }
 
-    /**
-     * 打开文件
-     * @Author lrh
-     * @Date 2020/1/14 15:34
-     * @Param [jFrame, jMenuItem]
-     * @Return void
-     */
-    private void openFileListener(final JFrame jFrame, final JMenuItem jMenuItem){
-        jMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jFileChooser = new JFileChooser();
-                if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
-                    File file = jFileChooser.getSelectedFile();
-                    readFile(file);
-                };
-            }
-        });
-    }
-    /**
-     * 读取文件
-     * @Author lrh
-     * @Date 2020/1/14 19:33
-     * @Param [file]
-     * @Return void
-     */
-    private void readFile(File file){
-        try {
-            long startTime = System.currentTimeMillis();
-            jTextArea.setText(null);
-            FileChannel fileChannel = new FileInputStream(file).getChannel();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(1048576);  //每次读取1M
-            int len = 0;
-            while((len = fileChannel.read(byteBuffer))!=-1){
-                jTextArea.append(new String(byteBuffer.array(),0,len,"UTF-8"));
-                byteBuffer.clear();
-            }
-            fileChannel.close();
-            System.out.println("读取数据一共："+jTextArea.getLineCount()+" 条，耗时："+(System.currentTimeMillis()-startTime)+" ms");
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null,"未找到文件");
-            e.printStackTrace();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"打开文件失败");
-            e.printStackTrace();
-        }
-    }
+
+
+
+
 
     /**
      * 动态添加组件后刷新组件
@@ -196,23 +133,14 @@ public class MyFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(component);
     }
 
-    /**
-     * 退出，关闭窗口
+
+    /**   
+     * 实例化对象，单例模式
      * @Author lrh
-     * @Date 2020/1/14 13:24
+     * @Date 2020/1/16 11:18
      * @Param []
-     * @Return void
+     * @Return frame.MyFrame
      */
-    private void exitSystemListener(final JFrame jFrame, JMenuItem jMenuItem){
-        jMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(jFrame, "确定退出？", "提示", JOptionPane.YES_NO_OPTION);
-                if(result == JOptionPane.YES_OPTION){
-                    System.exit(0);
-                }
-            }
-        });
-    }
     public static MyFrame getINSTANCE(){
         if(INSTANCE == null){
             INSTANCE = new MyFrame();
