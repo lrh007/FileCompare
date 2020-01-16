@@ -9,6 +9,8 @@ import javax.swing.plaf.MenuBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Scanner;
 
 /**
@@ -56,7 +58,7 @@ public class MyFrame extends JFrame {
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
     }
-    /**   
+    /**
      * 添加菜单栏
      * @Author lrh
      * @Date 2020/1/14 12:49
@@ -65,31 +67,48 @@ public class MyFrame extends JFrame {
      */
     private void addMenu(final JFrame jFrame){
         JMenuBar jMenuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("文件");
-        JMenu editMenu = new JMenu("编辑");
-        JMenu viewMenu = new JMenu("视图");
-        JMenu helpMenu = new JMenu("帮助");
+        JMenu fileMenu = new JMenu("文件(F)");
+        JMenu editMenu = new JMenu("编辑(E)");
+        JMenu searchMenu = new JMenu("搜索(S)");
+        JMenu viewMenu = new JMenu("视图(V)");
+        JMenu helpMenu = new JMenu("帮助(H)");
         Font font = new Font("微软雅黑",Font.PLAIN,18);
         fileMenu.setFont(font);
+        fileMenu.setMnemonic(KeyEvent.VK_F);
         editMenu.setFont(font);
+        editMenu.setMnemonic(KeyEvent.VK_E);
+        searchMenu.setFont(font);
+        searchMenu.setMnemonic(KeyEvent.VK_S);
         viewMenu.setFont(font);
+        viewMenu.setMnemonic(KeyEvent.VK_V);
         helpMenu.setFont(font);
+        helpMenu.setMnemonic(KeyEvent.VK_H);
         jMenuBar.add(fileMenu);
         jMenuBar.add(editMenu);
+        jMenuBar.add(searchMenu);
         jMenuBar.add(viewMenu);
         jMenuBar.add(helpMenu);
-        JMenuItem newFile = new JMenuItem("新建");
-        JMenuItem openFile = new JMenuItem("打开");
-        JMenuItem saveFile = new JMenuItem("保存");
-        JMenuItem exitSystem = new JMenuItem("退出");
+        JMenuItem newFile = new JMenuItem("新建(N)    ");
+        JMenuItem openFile = new JMenuItem("打开(O)   ");
+        JMenuItem saveFile = new JMenuItem("保存(S)   ");
+        JMenuItem exitSystem = new JMenuItem("退出(Q) ");
         newFile.setFont(font);
+        newFile.setMnemonic(KeyEvent.VK_N);
+        newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
         openFile.setFont(font);
+        openFile.setMnemonic(KeyEvent.VK_O);
+        openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
         saveFile.setFont(font);
+        saveFile.setMnemonic(KeyEvent.VK_S);
+        saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
         exitSystem.setFont(font);
+        exitSystem.setMnemonic(KeyEvent.VK_Q);
+        exitSystem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,ActionEvent.CTRL_MASK));
 
         fileMenu.add(newFile);
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
+        fileMenu.addSeparator(); //添加分割线
         fileMenu.add(exitSystem);
         exitSystemListener(jFrame,exitSystem); //退出系统
         openFileListener(jFrame,openFile);     //打开文件
@@ -137,7 +156,7 @@ public class MyFrame extends JFrame {
             }
         });
     }
-    /**   
+    /**
      * 读取文件
      * @Author lrh
      * @Date 2020/1/14 19:33
@@ -146,22 +165,17 @@ public class MyFrame extends JFrame {
      */
     private void readFile(File file){
         try {
-
-           /* Scanner scanner = new Scanner(file);
-            while(scanner.hasNext()){
-                jTextArea.append(scanner.nextLine());
-            }
-            scanner.close();*/
+            long startTime = System.currentTimeMillis();
             jTextArea.setText(null);
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-            byte[] bytes = new byte[409600];
+            FileChannel fileChannel = new FileInputStream(file).getChannel();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(1048576);  //每次读取1M
             int len = 0;
-            while((len = in.read(bytes))!=-1){
-                jTextArea.append(new String(bytes,0,len,"UTF-8"));
-                jTextArea.paintImmediately(jTextArea.getBounds());
+            while((len = fileChannel.read(byteBuffer))!=-1){
+                jTextArea.append(new String(byteBuffer.array(),0,len,"UTF-8"));
+                byteBuffer.clear();
             }
-            in.close();
-            System.out.println("一共："+jTextArea.getLineCount());
+            fileChannel.close();
+            System.out.println("读取数据一共："+jTextArea.getLineCount()+" 条，耗时："+(System.currentTimeMillis()-startTime)+" ms");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,"未找到文件");
             e.printStackTrace();
@@ -170,7 +184,7 @@ public class MyFrame extends JFrame {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * 动态添加组件后刷新组件
      * @Author lrh
@@ -182,7 +196,7 @@ public class MyFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(component);
     }
 
-    /**   
+    /**
      * 退出，关闭窗口
      * @Author lrh
      * @Date 2020/1/14 13:24
