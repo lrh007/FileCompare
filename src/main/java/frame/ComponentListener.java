@@ -1,6 +1,5 @@
 package frame;
 
-import javafx.scene.control.Labeled;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -23,6 +22,10 @@ import java.nio.channels.FileChannel;
  * @Version 1.0
  */
 public class ComponentListener {
+
+    private ComponentListener() {
+    }
+
     /**
      * jTextArea事件监听
      * @Author lrh
