@@ -23,10 +23,8 @@ import java.util.Scanner;
  */
 public class MyFrame extends JFrame {
     private static MyFrame INSTANCE;
-    // 创建文本区域组件
-    private  JTextArea jTextArea = new JTextArea();
-    // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条一直显示
-    private  JScrollPane jScrollPane;
+    //创建选项卡面板,标题位置在上面，放不下所有选项卡时使用滚动条
+    private static JTabbedPane jTabbedPane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
 
     private MyFrame() throws HeadlessException {
         this.setTitle("FileCompare");
@@ -39,26 +37,13 @@ public class MyFrame extends JFrame {
         this.setIconImage(imageIcon);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
         this.setSize(this.getWidth(),this.getHeight());
-        FrameMenu.addMenu(this,jTextArea);
-        jScrollPane = new JScrollPane(jTextArea);
-        this.add(jScrollPane);
-        init();
+
+        jTabbedPane.addTab("New 1",new TabCard()); //初始化一个空白选项卡
+        jTabbedPane.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
+        this.add(jTabbedPane);
+        FrameMenu.addMenu(this); //设置菜单栏
         this.setVisible(true);  //显示窗口
     }
-    /**
-     * 初始化
-     * @Author lrh
-     * @Date 2020/1/15 13:08
-     * @Param []
-     * @Return void
-     */
-    private void init(){
-        jTextArea.setFont(new Font(Constants.FONT_NAME, Font.PLAIN, Constants.FONT_SIZE));   // 设置字体
-        jScrollPane.setRowHeaderView(new LineNumberHeaderView());
-        jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    }
-
 
     /**
      * 动态添加组件后刷新组件
@@ -70,7 +55,17 @@ public class MyFrame extends JFrame {
     public static void updateUI(Component component){
         SwingUtilities.updateComponentTreeUI(component);
     }
-
+    
+    /**   
+     * 获取选项卡面板对象
+     * @Author lrh
+     * @Date 2020/1/16 15:34
+     * @Param []
+     * @Return javax.swing.JTabbedPane
+     */
+    public static JTabbedPane getJTabbedPane(){
+        return jTabbedPane;
+    }
 
     /**   
      * 实例化对象，单例模式

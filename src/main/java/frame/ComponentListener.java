@@ -55,10 +55,16 @@ public class ComponentListener {
      * @Param []
      * @Return void
      */
-    public static void newFileListener(final JFrame jFrame,final JMenuItem jMenuItem,final JTextArea jTextArea) {
+    public static void newFileListener(final JFrame jFrame,final JMenuItem jMenuItem) {
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                jTextArea.setText(null); //清空内容
+                JTabbedPane jTabbedPane = MyFrame.getJTabbedPane();   //获取选项卡面板对象
+                TabCard tabCard = new TabCard(); //创建选项卡对象
+                int tabCount = jTabbedPane.getTabCount(); //选项卡总个数
+                tabCount++; //总个数+1 等于名称
+                String fileName = "new "+tabCount; //新文件名称
+                jTabbedPane.addTab(fileName,null,tabCard,fileName);
+                jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
             }
         });
     }
@@ -69,13 +75,17 @@ public class ComponentListener {
      * @Param [jFrame, jMenuItem]
      * @Return void
      */
-    public static void openFileListener(final JFrame jFrame, final JMenuItem jMenuItem,final JTextArea jTextArea){
+    public static void openFileListener(final JFrame jFrame, final JMenuItem jMenuItem){
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jFileChooser = new JFileChooser();
                 if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
                     File file = jFileChooser.getSelectedFile();
-                    readFile(file,jTextArea);
+                    JTabbedPane jTabbedPane = MyFrame.getJTabbedPane();   //获取选项卡面板对象
+                    TabCard tabCard = new TabCard(); //创建选项卡对象
+                    jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
+                    jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+                    readFile(file,tabCard.getjTextArea());
                 };
             }
         });

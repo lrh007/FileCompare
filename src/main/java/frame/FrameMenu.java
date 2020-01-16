@@ -25,7 +25,7 @@ public class FrameMenu {
      * @Param []
      * @Return void
      */
-    public static void addMenu(final JFrame jFrame,final JTextArea jTextArea){
+    public static void addMenu(final JFrame jFrame){
         JMenuBar jMenuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("文件(F)");
         JMenu editMenu = new JMenu("编辑(E)");
@@ -71,9 +71,9 @@ public class FrameMenu {
         fileMenu.addSeparator(); //添加分割线
         fileMenu.add(exitSystem);
         jFrame.setJMenuBar(jMenuBar);
-        ComponentListener.exitSystemListener(jFrame,exitSystem);            //退出系统
-        ComponentListener.openFileListener(jFrame,openFile,jTextArea);      //打开文件
-        ComponentListener.jTextAreaListener(jTextArea);                     //输入数据
-        ComponentListener.newFileListener(jFrame,newFile,jTextArea);        //新建文件
+        ComponentListener.exitSystemListener(jFrame,exitSystem);  //退出系统
+        ComponentListener.openFileListener(jFrame,openFile);      //打开文件
+//        ComponentListener.jTextAreaListener(jTextArea);         //输入数据
+        ComponentListener.newFileListener(jFrame,newFile);        //新建文件
     }
 }
