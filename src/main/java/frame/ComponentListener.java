@@ -4,6 +4,7 @@ package frame;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,6 +23,8 @@ import java.nio.channels.FileChannel;
  * @Version 1.0
  */
 public class ComponentListener {
+
+    private static JTabbedPane jTabbedPane = MyFrame.getJTabbedPane();   //获取选项卡面板对象
 
     private ComponentListener() {
     }
@@ -58,13 +61,33 @@ public class ComponentListener {
     public static void newFileListener(final JFrame jFrame,final JMenuItem jMenuItem) {
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JTabbedPane jTabbedPane = MyFrame.getJTabbedPane();   //获取选项卡面板对象
                 TabCard tabCard = new TabCard(); //创建选项卡对象
                 int tabCount = jTabbedPane.getTabCount(); //选项卡总个数
                 tabCount++; //总个数+1 等于名称
                 String fileName = "new "+tabCount; //新文件名称
                 jTabbedPane.addTab(fileName,null,tabCard,fileName);
                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+            }
+        });
+    }
+    /**   
+     * 关闭当前选项卡事件监听
+     * @Author lrh
+     * @Date 2020/1/16 18:34
+     * @Param []
+     * @Return void
+     */
+    public static void closeTabListener(final JFrame jFrame,final JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Component selectedComponent = jTabbedPane.getSelectedComponent(); //获取当前选中的选项卡
+                jTabbedPane.remove(selectedComponent);
+                int tabCount = jTabbedPane.getTabCount(); //选项卡总个数
+                //选项卡全部关闭之后退出
+                if(tabCount == 0){
+                    System.exit(0);
+                }
+
             }
         });
     }
@@ -81,7 +104,6 @@ public class ComponentListener {
                 JFileChooser jFileChooser = new JFileChooser();
                 if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
                     File file = jFileChooser.getSelectedFile();
-                    JTabbedPane jTabbedPane = MyFrame.getJTabbedPane();   //获取选项卡面板对象
                     TabCard tabCard = new TabCard(); //创建选项卡对象
                     jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡

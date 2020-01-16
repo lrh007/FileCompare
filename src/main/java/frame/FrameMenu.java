@@ -51,6 +51,7 @@ public class FrameMenu {
         JMenuItem newFile = new JMenuItem("新建(N)    ");
         JMenuItem openFile = new JMenuItem("打开(O)   ");
         JMenuItem saveFile = new JMenuItem("保存(S)   ");
+        JMenuItem closeTab = new JMenuItem("关闭(W)   ");
         JMenuItem exitSystem = new JMenuItem("退出(Q) ");
         newFile.setFont(font);
         newFile.setMnemonic(KeyEvent.VK_N);
@@ -61,6 +62,9 @@ public class FrameMenu {
         saveFile.setFont(font);
         saveFile.setMnemonic(KeyEvent.VK_S);
         saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
+        closeTab.setFont(font);
+        closeTab.setMnemonic(KeyEvent.VK_W);
+        closeTab.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W,ActionEvent.CTRL_MASK));
         exitSystem.setFont(font);
         exitSystem.setMnemonic(KeyEvent.VK_Q);
         exitSystem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,ActionEvent.CTRL_MASK));
@@ -68,6 +72,7 @@ public class FrameMenu {
         fileMenu.add(newFile);
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
+        fileMenu.add(closeTab);
         fileMenu.addSeparator(); //添加分割线
         fileMenu.add(exitSystem);
         jFrame.setJMenuBar(jMenuBar);
@@ -75,5 +80,6 @@ public class FrameMenu {
         ComponentListener.openFileListener(jFrame,openFile);      //打开文件
 //        ComponentListener.jTextAreaListener(jTextArea);         //输入数据
         ComponentListener.newFileListener(jFrame,newFile);        //新建文件
+        ComponentListener.closeTabListener(jFrame,closeTab);      //关闭当前选项卡
     }
 }

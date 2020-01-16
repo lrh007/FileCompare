@@ -38,7 +38,7 @@ public class MyFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //关闭窗口时退出进程
         this.setSize(this.getWidth(),this.getHeight());
 
-        jTabbedPane.addTab("New 1",new TabCard()); //初始化一个空白选项卡
+        jTabbedPane.addTab("new 1",null,new TabCard(),"new 1"); //初始化一个空白选项卡
         jTabbedPane.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
         this.add(jTabbedPane);
         FrameMenu.addMenu(this); //设置菜单栏
