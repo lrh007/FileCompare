@@ -1,5 +1,4 @@
 import frame.MyFrame;
-import java.io.IOException;
 
 /**
  * 主程序

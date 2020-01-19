@@ -18,7 +18,10 @@ public class TabCard extends JPanel {
     private JTextArea jTextArea;
     // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条一直显示
     private  JScrollPane jScrollPane;
-
+    //文件绝对路径
+    private String absoluteFilePath;
+    //文件名称（短名称）
+    private String fileName;
     public TabCard() {
         super();
         jTextArea = new JTextArea(20,20);
@@ -48,5 +51,21 @@ public class TabCard extends JPanel {
      */
     public JScrollPane getjScrollPane() {
         return jScrollPane;
+    }
+
+    public String getAbsoluteFilePath() {
+        return absoluteFilePath;
+    }
+
+    public void setAbsoluteFilePath(String absoluteFilePath) {
+        this.absoluteFilePath = absoluteFilePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

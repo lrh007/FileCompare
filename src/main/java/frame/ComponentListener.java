@@ -7,10 +7,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -65,6 +62,7 @@ public class ComponentListener {
                 int tabCount = jTabbedPane.getTabCount(); //选项卡总个数
                 tabCount++; //总个数+1 等于名称
                 String fileName = "new "+tabCount; //新文件名称
+                tabCard.setFileName(fileName); //保存文件名称
                 jTabbedPane.addTab(fileName,null,tabCard,fileName);
                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
             }
@@ -105,6 +103,8 @@ public class ComponentListener {
                 if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
                     File file = jFileChooser.getSelectedFile();
                     TabCard tabCard = new TabCard(); //创建选项卡对象
+                    tabCard.setAbsoluteFilePath(file.getAbsolutePath()); //保存文件绝对路径
+                    tabCard.setFileName(file.getName());   //保存文件名称（短名称）
                     jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
                     readFile(file,tabCard.getjTextArea());
@@ -156,5 +156,70 @@ public class ComponentListener {
                 }
             }
         });
+    }
+    
+    /**   
+     * 保存文件事件监听
+     * @Author lrh
+     * @Date 2020/1/19 20:17
+     * @Param [jFrame, jMenuItem]
+     * @Return void
+     */
+    public static void saveFileListener(final JFrame jFrame,JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                JTextArea jTextArea = tabCard.getjTextArea();
+                String text = jTextArea.getText(); //获取当前所有的文件内容
+                int selectedIndex = jTabbedPane.getSelectedIndex(); //获取当前选中的tab卡的索引
+                try{
+
+                    if(tabCard.getAbsoluteFilePath() == null){ //当前文件是新建的文件
+                        //打开文件选择框
+                        JFileChooser jFileChooser = new JFileChooser();
+                        jFileChooser.setSelectedFile(new File(tabCard.getFileName()));
+                        int result = jFileChooser.showSaveDialog(jFrame);
+                        if(result == JFileChooser.APPROVE_OPTION){
+                            File file = jFileChooser.getSelectedFile();
+                            jTabbedPane.setTitleAt(selectedIndex,file.getName());  //重新设置标题
+                            jTabbedPane.setToolTipTextAt(selectedIndex,file.getAbsolutePath()); //重新设置提示信息
+                            tabCard.setFileName(file.getName());
+                            tabCard.setAbsoluteFilePath(file.getAbsolutePath());
+                            writeFile(file,text);
+                            JOptionPane.showMessageDialog(null,"保存成功");
+                        }
+                    }else{ //当前文件是打开的文件
+                        String fileName = tabCard.getFileName();   //获取文件名称
+                        String filePath = tabCard.getAbsoluteFilePath(); //获取文件绝对路径
+                        File file = new File(filePath);
+                        writeFile(file,text);
+                        JOptionPane.showMessageDialog(null,"保存成功");
+                    }
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null,"保存失败，异常信息="+ex.getMessage());
+                    System.out.println("文件保存失败，异常信息="+ex);
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
+    }
+    /**
+     * 写入文件
+     * @Author lrh
+     * @Date 2020/1/19 22:27
+     * @Param [file]
+     * @Return void
+     */
+    private static void writeFile(File file,String text) throws IOException {
+        FileChannel fileChannel = new FileOutputStream(file).getChannel();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(text.getBytes().length);
+        byteBuffer.put(text.getBytes());
+        byteBuffer.flip(); //切换成读取模式
+        while(byteBuffer.hasRemaining()){
+            fileChannel.write(byteBuffer);//写入文件
+        }
+        fileChannel.close();
+        byteBuffer.clear();
     }
 }

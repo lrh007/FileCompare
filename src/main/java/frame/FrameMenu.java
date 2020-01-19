@@ -81,5 +81,6 @@ public class FrameMenu {
 //        ComponentListener.jTextAreaListener(jTextArea);         //输入数据
         ComponentListener.newFileListener(jFrame,newFile);        //新建文件
         ComponentListener.closeTabListener(jFrame,closeTab);      //关闭当前选项卡
+        ComponentListener.saveFileListener(jFrame,saveFile);      //保存文件
     }
 }
