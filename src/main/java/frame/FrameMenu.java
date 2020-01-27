@@ -78,7 +78,6 @@ public class FrameMenu {
         jFrame.setJMenuBar(jMenuBar);
         ComponentListener.exitSystemListener(jFrame,exitSystem);  //退出系统
         ComponentListener.openFileListener(jFrame,openFile);      //打开文件
-//        ComponentListener.jTextAreaListener(jTextArea);         //输入数据
         ComponentListener.newFileListener(jFrame,newFile);        //新建文件
         ComponentListener.closeTabListener(jFrame,closeTab);      //关闭当前选项卡
         ComponentListener.saveFileListener(jFrame,saveFile);      //保存文件

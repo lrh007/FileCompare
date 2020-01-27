@@ -47,6 +47,8 @@ public class ComponentListener {
                 System.out.println("更新数据");
             }
         });
+
+
     }
     /**
      * 新建文件事件监听
@@ -65,6 +67,7 @@ public class ComponentListener {
                 tabCard.setFileName(fileName); //保存文件名称
                 jTabbedPane.addTab(fileName,null,tabCard,fileName);
                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+                jTextAreaListener(tabCard.getjTextArea()); //添加事件监听
             }
         });
     }
@@ -108,6 +111,7 @@ public class ComponentListener {
                     jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
                     readFile(file,tabCard.getjTextArea());
+                    jTextAreaListener(tabCard.getjTextArea()); //添加事件监听
                 };
             }
         });
@@ -222,4 +226,5 @@ public class ComponentListener {
         fileChannel.close();
         byteBuffer.clear();
     }
+
 }

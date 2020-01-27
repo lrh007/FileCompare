@@ -44,7 +44,7 @@ public class TabCard extends JPanel {
         jTextArea = new JTextArea(20,20);
         jScrollPane = new JScrollPane(jTextArea);
         jToolBar = new JToolBar();
-        fileState = new JLabel("文件状态：未保存");
+        fileState = new JLabel("文件状态："+Constants.FILE_STATE_UNSAVE);
         fileAttribute = new JLabel("长度：0    行数：1");
         init();
     }
@@ -61,7 +61,6 @@ public class TabCard extends JPanel {
         this.setLayout(new BorderLayout(1,2));  //布局管理，这里一定要设置，否则会不显示
         jToolBar.setFloatable(false);  //设置为不可移动
         jToolBar.add(fileState);
-        jToolBar.addSeparator();
         jToolBar.add(fileAttribute);
         fileState.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
         fileAttribute.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
@@ -128,4 +127,5 @@ public class TabCard extends JPanel {
     public void setFileAttribute(JLabel fileAttribute) {
         this.fileAttribute = fileAttribute;
     }
+
 }
