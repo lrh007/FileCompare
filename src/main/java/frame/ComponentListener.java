@@ -4,6 +4,9 @@ package frame;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +36,7 @@ public class ComponentListener {
      * @Param []
      * @Return void
      */
-    public static void jTextAreaListener(JTextArea jTextArea){
+    public static void jTextAreaListener(JTextArea jTextArea, final UndoManager undoManager){
         jTextArea.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 System.out.println("输入数据");
@@ -45,6 +48,12 @@ public class ComponentListener {
 
             public void changedUpdate(DocumentEvent e) {
                 System.out.println("更新数据");
+            }
+        });
+        //添加撤销/恢复事件监听
+        jTextArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
             }
         });
 
@@ -67,7 +76,7 @@ public class ComponentListener {
                 tabCard.setFileName(fileName); //保存文件名称
                 jTabbedPane.addTab(fileName,null,tabCard,fileName);
                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
-                jTextAreaListener(tabCard.getjTextArea()); //添加事件监听
+                jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
             }
         });
     }
@@ -111,7 +120,7 @@ public class ComponentListener {
                     jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
                     readFile(file,tabCard.getjTextArea());
-                    jTextAreaListener(tabCard.getjTextArea()); //添加事件监听
+                    jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
                 };
             }
         });
@@ -226,5 +235,86 @@ public class ComponentListener {
         fileChannel.close();
         byteBuffer.clear();
     }
-
+    /**   
+     * 复制文件事件监听器
+     * @Author lrh
+     * @Date 2020/1/29 9:05
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void copyFileListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                JTextArea jTextArea = tabCard.getjTextArea();
+                jTextArea.copy();
+            }
+        });
+    }
+    /**   
+     * 剪切文件事件监听器
+     * @Author lrh
+     * @Date 2020/1/29 9:06
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void cutFileListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                JTextArea jTextArea = tabCard.getjTextArea();
+                jTextArea.cut();
+            }
+        });
+    }
+    /**   
+     * 粘贴文件事件监听器
+     * @Author lrh
+     * @Date 2020/1/29 9:07
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void pasteFileListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                JTextArea jTextArea = tabCard.getjTextArea();
+                jTextArea.paste();
+            }
+        });
+    }
+    /**
+     * 撤销文本事件监听
+     * @Author lrh
+     * @Date 2020/1/29 9:32
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void cancelOptionListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                if(tabCard.getUndoManager().canUndo()){
+                    tabCard.getUndoManager().undo();
+                }
+            }
+        });
+    }
+    /**
+     * 恢复文本事件监听
+     * @Author lrh
+     * @Date 2020/1/29 9:32
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void resetOptionListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();//获取当前选中的tab卡对象
+                if(tabCard.getUndoManager().canRedo()){
+                    tabCard.getUndoManager().redo();
+                }
+            }
+        });
+    }
 }

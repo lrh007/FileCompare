@@ -3,6 +3,7 @@ package frame;
 import constant.Constants;
 
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 
 /**
@@ -14,6 +15,8 @@ import java.awt.*;
  * @Version 1.0
  */
 public class TabCard extends JPanel {
+    //JTextArea撤销管理类
+    private UndoManager undoManager;
     // 创建文本区域组件
     private JTextArea jTextArea;
     // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条一直显示
@@ -46,6 +49,7 @@ public class TabCard extends JPanel {
         jToolBar = new JToolBar();
         fileState = new JLabel("文件状态："+Constants.FILE_STATE_UNSAVE);
         fileAttribute = new JLabel("长度：0    行数：1");
+        undoManager = new UndoManager();
         init();
     }
     /**
@@ -128,4 +132,11 @@ public class TabCard extends JPanel {
         this.fileAttribute = fileAttribute;
     }
 
+    public UndoManager getUndoManager() {
+        return undoManager;
+    }
+
+    public void setUndoManager(UndoManager undoManager) {
+        this.undoManager = undoManager;
+    }
 }

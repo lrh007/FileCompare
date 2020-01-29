@@ -53,6 +53,11 @@ public class FrameMenu {
         JMenuItem saveFile = new JMenuItem("保存(S)   ");
         JMenuItem closeTab = new JMenuItem("关闭(W)   ");
         JMenuItem exitSystem = new JMenuItem("退出(Q) ");
+        JMenuItem cancelOption = new JMenuItem("撤销(Z)   ");
+        JMenuItem resetOption = new JMenuItem("恢复(Y)    ");
+        JMenuItem cutFile = new JMenuItem("剪切(X)    ");
+        JMenuItem copyFile = new JMenuItem("复制(C)   ");
+        JMenuItem pasteFile = new JMenuItem("粘贴(V)  ");
         newFile.setFont(font);
         newFile.setMnemonic(KeyEvent.VK_N);
         newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
@@ -69,17 +74,49 @@ public class FrameMenu {
         exitSystem.setMnemonic(KeyEvent.VK_Q);
         exitSystem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,ActionEvent.CTRL_MASK));
 
+        cancelOption.setFont(font);
+        cancelOption.setMnemonic(KeyEvent.VK_Z);
+        cancelOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+        resetOption.setFont(font);
+        resetOption.setMnemonic(KeyEvent.VK_Y);
+        resetOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+
+        copyFile.setFont(font);
+        copyFile.setMnemonic(KeyEvent.VK_C);
+        copyFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        cutFile.setFont(font);
+        cutFile.setMnemonic(KeyEvent.VK_X);
+        cutFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+        pasteFile.setFont(font);
+        pasteFile.setMnemonic(KeyEvent.VK_V);
+        pasteFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+
         fileMenu.add(newFile);
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
         fileMenu.add(closeTab);
         fileMenu.addSeparator(); //添加分割线
         fileMenu.add(exitSystem);
+
+        editMenu.add(cancelOption);
+        editMenu.add(resetOption);
+        editMenu.addSeparator();
+        editMenu.add(cutFile);
+        editMenu.add(copyFile);
+        editMenu.add(pasteFile);
         jFrame.setJMenuBar(jMenuBar);
+
         ComponentListener.exitSystemListener(jFrame,exitSystem);  //退出系统
         ComponentListener.openFileListener(jFrame,openFile);      //打开文件
         ComponentListener.newFileListener(jFrame,newFile);        //新建文件
         ComponentListener.closeTabListener(jFrame,closeTab);      //关闭当前选项卡
         ComponentListener.saveFileListener(jFrame,saveFile);      //保存文件
+
+        ComponentListener.cancelOptionListener(cancelOption);     //撤销
+        ComponentListener.resetOptionListener(resetOption);       //恢复
+        ComponentListener.copyFileListener(copyFile);             //复制
+        ComponentListener.cutFileListener(cutFile);               //剪切
+        ComponentListener.pasteFileListener(pasteFile);           //粘贴
+
     }
 }
