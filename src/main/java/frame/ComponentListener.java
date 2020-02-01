@@ -113,14 +113,20 @@ public class ComponentListener {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jFileChooser = new JFileChooser();
                 if (jFileChooser.showOpenDialog(jMenuItem)==JFileChooser.APPROVE_OPTION) {
-                    File file = jFileChooser.getSelectedFile();
-                    TabCard tabCard = new TabCard(); //创建选项卡对象
+                    final File file = jFileChooser.getSelectedFile();
+                    final TabCard tabCard = new TabCard(); //创建选项卡对象
                     tabCard.setAbsoluteFilePath(file.getAbsolutePath()); //保存文件绝对路径
                     tabCard.setFileName(file.getName());   //保存文件名称（短名称）
                     jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
-                    readFile(file,tabCard.getjTextArea());
-                    jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
+                    //将文件的读取放到一个单独的线程中，防止界面发生卡顿
+                    new Thread(new Runnable() {
+                        public void run() {
+                            readFile(file,tabCard.getjTextArea());
+                            jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
+                        }
+                    }).start();
+
                 };
             }
         });
@@ -199,14 +205,12 @@ public class ComponentListener {
                             tabCard.setFileName(file.getName());
                             tabCard.setAbsoluteFilePath(file.getAbsolutePath());
                             writeFile(file,text);
-                            JOptionPane.showMessageDialog(null,"保存成功");
                         }
                     }else{ //当前文件是打开的文件
                         String fileName = tabCard.getFileName();   //获取文件名称
                         String filePath = tabCard.getAbsoluteFilePath(); //获取文件绝对路径
                         File file = new File(filePath);
                         writeFile(file,text);
-                        JOptionPane.showMessageDialog(null,"保存成功");
                     }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null,"保存失败，异常信息="+ex.getMessage());
@@ -224,16 +228,27 @@ public class ComponentListener {
      * @Param [file]
      * @Return void
      */
-    private static void writeFile(File file,String text) throws IOException {
-        FileChannel fileChannel = new FileOutputStream(file).getChannel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(text.getBytes().length);
-        byteBuffer.put(text.getBytes());
-        byteBuffer.flip(); //切换成读取模式
-        while(byteBuffer.hasRemaining()){
-            fileChannel.write(byteBuffer);//写入文件
-        }
-        fileChannel.close();
-        byteBuffer.clear();
+    private static void writeFile(final File file, final String text) throws Exception {
+        //将文件保存放到单独的线程中，防止界面卡顿
+        new Thread(new Runnable() {
+            public void run() {
+                try{
+                    FileChannel fileChannel = new FileOutputStream(file).getChannel();
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(text.getBytes().length);
+                    byteBuffer.put(text.getBytes());
+                    byteBuffer.flip(); //切换成读取模式
+                    while(byteBuffer.hasRemaining()){
+                        fileChannel.write(byteBuffer);//写入文件
+                    }
+                    fileChannel.close();
+                    byteBuffer.clear();
+                    JOptionPane.showMessageDialog(null,"保存成功");
+
+                }catch (Exception ex){
+                    throw new RuntimeException("保存文件异常",ex);
+                }
+            }
+        }).start();
     }
     /**   
      * 复制文件事件监听器
@@ -314,6 +329,28 @@ public class ComponentListener {
                 if(tabCard.getUndoManager().canRedo()){
                     tabCard.getUndoManager().redo();
                 }
+            }
+        });
+    }
+    /**
+     * 查找文件事件监听
+     * @Author lrh
+     * @Date 2020/2/1 9:31
+     * @Param [jMenuItem]
+     * @Return void
+     */
+    public static void searchFileListener(JMenuItem jMenuItem){
+        jMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("查找文件");
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                JTextArea jTextArea = tabCard.getjTextArea();
+                String str = "liangrh";
+                int index = jTextArea.getText().indexOf(str);
+                jTextArea.setSelectionStart(index); //开始e位置
+                jTextArea.setSelectionEnd(index+str.length()); //结束位置
+//                jTextArea.setSelectedTextColor(Color.BLUE); //选中文本的字体颜色
+                jTextArea.setSelectionColor(Color.GREEN);    //选中文本的背景色
             }
         });
     }

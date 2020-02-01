@@ -30,6 +30,7 @@ public class FrameMenu {
     private static JMenuItem cutFile = new JMenuItem("剪切(X)    ");
     private static JMenuItem copyFile = new JMenuItem("复制(C)   ");
     private static JMenuItem pasteFile = new JMenuItem("粘贴(V)  ");
+    private static JMenuItem searchFile = new JMenuItem("查找(F)  ");
     private static Font font = new Font("微软雅黑",Font.PLAIN,18);
 
     private FrameMenu() {
@@ -84,6 +85,8 @@ public class FrameMenu {
         editMenu.add(cutFile);
         editMenu.add(copyFile);
         editMenu.add(pasteFile);
+        /**添加搜索按钮的二级菜单**/
+        searchMenu.add(searchFile);
         /**添加菜单的快捷键**/
         addHotKey(jFrame);
     }
@@ -138,6 +141,10 @@ public class FrameMenu {
         pasteFile.setFont(font);
         pasteFile.setMnemonic(KeyEvent.VK_V);
         pasteFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        /**添加搜索按钮下面所有子菜单的快捷键**/
+        searchFile.setFont(font);
+        searchFile.setMnemonic(KeyEvent.VK_F);
+        searchFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         /**添加事件监听**/
         addListener(jFrame);
     }
@@ -160,5 +167,6 @@ public class FrameMenu {
         ComponentListener.copyFileListener(copyFile);             //复制
         ComponentListener.cutFileListener(cutFile);               //剪切
         ComponentListener.pasteFileListener(pasteFile);           //粘贴
+        ComponentListener.searchFileListener(searchFile);         //查找文件
     }
 }
