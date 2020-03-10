@@ -339,19 +339,30 @@ public class ComponentListener {
      * @Param [jMenuItem]
      * @Return void
      */
-    public static void searchFileListener(JMenuItem jMenuItem){
+    public static void searchFileListener(final JFrame jFrame, JMenuItem jMenuItem){
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("查找文件");
-                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
-                JTextArea jTextArea = tabCard.getjTextArea();
-                String str = "liangrh";
-                int index = jTextArea.getText().indexOf(str);
-                jTextArea.setSelectionStart(index); //开始e位置
-                jTextArea.setSelectionEnd(index+str.length()); //结束位置
-//                jTextArea.setSelectedTextColor(Color.BLUE); //选中文本的字体颜色
-                jTextArea.setSelectionColor(Color.GREEN);    //选中文本的背景色
+                SearchDialog.getInstance(jFrame);
+
             }
         });
+    }
+    /**
+     * 查找和替换文件
+     * @Author lrh
+     * @Date 2020/2/6 9:58
+     * @Param []
+     * @Return void
+     */
+    private static void searchFile(){
+        TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+        JTextArea jTextArea = tabCard.getjTextArea();
+        String str = "liangrh";
+        int index = jTextArea.getText().indexOf(str);
+        jTextArea.setSelectionStart(index); //开始e位置
+        jTextArea.setSelectionEnd(index+str.length()); //结束位置
+//                jTextArea.setSelectedTextColor(Color.BLUE); //选中文本的字体颜色
+        jTextArea.setSelectionColor(Color.GREEN);    //选中文本的背景色
     }
 }

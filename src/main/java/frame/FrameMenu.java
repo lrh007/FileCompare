@@ -167,6 +167,6 @@ public class FrameMenu {
         ComponentListener.copyFileListener(copyFile);             //复制
         ComponentListener.cutFileListener(cutFile);               //剪切
         ComponentListener.pasteFileListener(pasteFile);           //粘贴
-        ComponentListener.searchFileListener(searchFile);         //查找文件
+        ComponentListener.searchFileListener(jFrame,searchFile);  //查找文件
     }
 }
