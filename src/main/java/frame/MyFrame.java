@@ -41,7 +41,7 @@ public class MyFrame extends JFrame {
         String fileName = "new 1";
         tabCard.setFileName(fileName); //初始化文件名称
         jTabbedPane.addTab(fileName,null,tabCard,fileName); //初始化一个空白选项卡
-        jTabbedPane.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
+        jTabbedPane.setFont(Constants.FONT);
         ComponentListener.jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
         this.add(jTabbedPane);
         FrameMenu.addMenu(this); //设置菜单栏

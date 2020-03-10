@@ -60,14 +60,14 @@ public class TabCard extends JPanel {
      * @Return void
      */
     private void init(){
-        jTextArea.setFont(new Font(Constants.FONT_NAME, Font.PLAIN, Constants.FONT_SIZE));   // 设置字体
+        jTextArea.setFont(Constants.FONT);   // 设置字体
         jScrollPane.setRowHeaderView(new LineNumberHeaderView());
         this.setLayout(new BorderLayout(1,2));  //布局管理，这里一定要设置，否则会不显示
         jToolBar.setFloatable(false);  //设置为不可移动
         jToolBar.add(fileState);
         jToolBar.add(fileAttribute);
-        fileState.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
-        fileAttribute.setFont(new Font(Constants.FONT_NAME,Font.PLAIN,Constants.FONT_SIZE));
+        fileState.setFont(Constants.FONT);
+        fileAttribute.setFont(Constants.FONT);
         this.add(jScrollPane,BorderLayout.CENTER); //设置据中显示
         this.add(jToolBar,BorderLayout.PAGE_END);  //设置显示在底部
     }
