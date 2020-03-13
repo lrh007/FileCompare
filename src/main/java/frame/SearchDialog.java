@@ -29,8 +29,10 @@ public class SearchDialog extends JDialog {
     private JButton searchNext = new JButton("查找下一个");
     /**查找目标文本**/
     private JLabel searchTarget = new JLabel("查找目标: ");
+    /**目标文本索引位置**/
+    private int indexOf = 0;
     private SearchDialog(){
-        
+
     }
     /**   
      * 初始化参数
@@ -57,10 +59,28 @@ public class SearchDialog extends JDialog {
         //查找下一个
         searchNext.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String searchStr = inputStr.getText();
                 TabCard  tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
-                String text = jTextArea.getText();
-                System.out.println(text);
+                jTextArea.setSelectionColor(Color.green);
+                int index = jTextArea.getText().indexOf(searchStr,indexOf);
+                if(index >= 0 ){
+                    jTextArea.setSelectionStart(index); //设置文本开始选中的位置
+                    jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
+                    indexOf = index+searchStr.length();
+                }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
+                    indexOf = 0; //找不到时从头开始查找
+                    index = jTextArea.getText().indexOf(searchStr,indexOf);
+                    if(index >=0 ){
+                        jTextArea.setSelectionStart(index); //设置文本开始选中的位置
+                        jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
+                        indexOf = index+searchStr.length();
+                    }else{
+                        indexOf = 0; //找不到时从头开始查找
+                        jTextArea.setSelectionStart(0); //设置文本开始选中的位置
+                        jTextArea.setSelectionEnd(0);
+                    }
+                }
             }
         });
     }
