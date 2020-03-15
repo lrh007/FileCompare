@@ -81,6 +81,7 @@ public class SearchDialog extends JDialog {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                tips.setText(""); //清空提示信息
                 INSTANCE = null;
             }
         });
