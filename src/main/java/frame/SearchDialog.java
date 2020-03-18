@@ -173,7 +173,7 @@ public class SearchDialog extends JDialog {
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
                 //将鼠标定位到文件末尾
-                if(indexOf <= 0){
+                if(indexOf < 0){
                     indexOf = jTextArea.getText().length();
                 }
                 int index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
@@ -181,6 +181,7 @@ public class SearchDialog extends JDialog {
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                     jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                     indexOf = index-1;
+                    replaceFlag = true;
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                     index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
@@ -188,6 +189,7 @@ public class SearchDialog extends JDialog {
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                         indexOf = index-1;
+                        replaceFlag = true;
                     }else{
                         indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
@@ -231,6 +233,7 @@ public class SearchDialog extends JDialog {
                     indexOf = index+searchStr.length();
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                     jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
+                    replaceFlag = true;
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = 0; //找不到时从头开始查找
                     index = jTextArea.getText().indexOf(searchStr,indexOf);
@@ -238,6 +241,7 @@ public class SearchDialog extends JDialog {
                         indexOf = index+searchStr.length();
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
+                        replaceFlag = true;
                     }else{
                         indexOf = 0; //找不到时从头开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
