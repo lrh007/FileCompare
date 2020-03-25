@@ -76,6 +76,8 @@ public class SearchDialog extends JDialog {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                searchPanel.getTips().setText("");
+                replacePanel.getTips().setText("");
                 INSTANCE = null;
             }
         });

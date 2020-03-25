@@ -36,7 +36,7 @@ public class ReplacePanel extends JPanel {
     /**查找目标文本**/
     private JLabel searchTarget = new JLabel("查找目标: ");
     /**提示信息**/
-    private static JLabel tips = new JLabel();
+    private JLabel tips = new JLabel();
     /**替换文本**/
     private JLabel replaceTarget = new JLabel("替换为： ");
     /**替换的字符串**/
@@ -115,7 +115,7 @@ public class ReplacePanel extends JPanel {
      * @Param [msg]
      * @Return void
      */
-    public static void setErrorTipsMsg(String msg){
+    public void setErrorTipsMsg(String msg){
         tips.setForeground(Color.RED);
         tips.setText(msg);
     }
@@ -126,7 +126,7 @@ public class ReplacePanel extends JPanel {
      * @Param [msg]
      * @Return void
      */
-    public static void setNormalTipsMsg(String msg){
+    public void setNormalTipsMsg(String msg){
         tips.setForeground(Color.decode("#42be3b"));
         tips.setText(msg);
     }
@@ -403,12 +403,12 @@ public class ReplacePanel extends JPanel {
         this.searchTarget = searchTarget;
     }
 
-    public static JLabel getTips() {
+    public JLabel getTips() {
         return tips;
     }
 
-    public static void setTips(JLabel tips) {
-        ReplacePanel.tips = tips;
+    public void setTips(JLabel tips) {
+        this.tips = tips;
     }
 
     public JLabel getReplaceTarget() {
