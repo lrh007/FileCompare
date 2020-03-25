@@ -133,24 +133,19 @@ public class SearchPanel extends JPanel{
                 TabCard tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
-                //将鼠标定位到文件末尾
-                if(indexOf < 0){
-                    indexOf = jTextArea.getText().length();
-                }
+                //获取选中文本的开始索引位置
+                indexOf = jTextArea.getSelectionStart()-1;
                 int index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
                 if(index >= 0 ){
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                     jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
-                    indexOf = index-1;
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                     index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
                     if(index >=0 ){
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
-                        indexOf = index-1;
                     }else{
-                        indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(0);
                         setErrorTipsMsg("查找： 无法找到文本\""+searchStr+"\"");
@@ -184,23 +179,22 @@ public class SearchPanel extends JPanel{
                 TabCard  tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
-                if(indexOf < 0){
+                //获取选中文本的结束索引位置
+                indexOf = jTextArea.getSelectionEnd()+1;
+                if(indexOf >= jTextArea.getText().length()){
                     indexOf = 0;
                 }
                 int index = jTextArea.getText().indexOf(searchStr,indexOf);
                 if(index >= 0 ){
-                    indexOf = index+searchStr.length();
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
-                    jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
+                    jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = 0; //找不到时从头开始查找
                     index = jTextArea.getText().indexOf(searchStr,indexOf);
                     if(index >=0 ){
-                        indexOf = index+searchStr.length();
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
-                        jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
+                        jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                     }else{
-                        indexOf = 0; //找不到时从头开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(0);
                         setErrorTipsMsg("查找： 无法找到文本\""+searchStr+"\"");

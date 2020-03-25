@@ -87,6 +87,19 @@ public class SearchDialog extends JDialog {
                 int selectedIndex = jTabbedPane.getSelectedIndex();//获得被选中选项卡的索引
                 String title = jTabbedPane.getTitleAt(selectedIndex);//获得指定索引的选项卡标签
                 setTitleName(title);
+                //自动选中查找输入框的文本
+                switch (selectedIndex){
+                    case 0://查找
+                        searchPanel.getInputStr().requestFocus();
+                        searchPanel.getInputStr().selectAll();
+                        break;
+                    case 1://替换
+                        replacePanel.getInputStr().requestFocus();
+                        replacePanel.getInputStr().selectAll();
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 

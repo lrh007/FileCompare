@@ -44,13 +44,9 @@ public class ReplacePanel extends JPanel {
     /**替换按钮**/
     private JButton replaceBtn = new JButton("替换");
     /**替换全部按钮**/
-    private JButton replaceAllBtn = new JButton("替换全部");
+    private JButton replaceAllBtn = new JButton("全部替换");
     /**目标文本索引位置**/
     private int indexOf = 0;
-    /**文本替换标识**/
-    private boolean replaceFlag = false;
-    /**下一个文本替换标识**/
-    private boolean nextReplaceFlag = false;
     /**对话框对象**/
     private SearchDialog searchDialog;
     private ReplacePanel(){
@@ -152,26 +148,19 @@ public class ReplacePanel extends JPanel {
                 TabCard tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
-                //将鼠标定位到文件末尾
-                if(indexOf < 0){
-                    indexOf = jTextArea.getText().length();
-                }
+                //获取选中文本的开始索引位置
+                indexOf = jTextArea.getSelectionStart()-1;
                 int index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
                 if(index >= 0 ){
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                     jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
-                    indexOf = index-1;
-                    replaceFlag = true;
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                     index = jTextArea.getText().lastIndexOf(searchStr,indexOf);
                     if(index >=0 ){
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
-                        indexOf = index-1;
-                        replaceFlag = true;
                     }else{
-                        indexOf = jTextArea.getText().length();   //找不到时从尾部开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(0);
                         setErrorTipsMsg("查找： 无法找到文本\""+searchStr+"\"");
@@ -205,25 +194,22 @@ public class ReplacePanel extends JPanel {
                 TabCard  tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
-                if(indexOf < 0){
+                //获取选中文本的结束索引位置
+                indexOf = jTextArea.getSelectionEnd()+1;
+                if(indexOf >= jTextArea.getText().length()){
                     indexOf = 0;
                 }
                 int index = jTextArea.getText().indexOf(searchStr,indexOf);
                 if(index >= 0 ){
-                    indexOf = index+searchStr.length();
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
-                    jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
-                    replaceFlag = true;
+                    jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = 0; //找不到时从头开始查找
                     index = jTextArea.getText().indexOf(searchStr,indexOf);
                     if(index >=0 ){
-                        indexOf = index+searchStr.length();
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
-                        jTextArea.setSelectionEnd(indexOf); //文本结束选中的位置
-                        replaceFlag = true;
+                        jTextArea.setSelectionEnd(index+searchStr.length()); //文本结束选中的位置
                     }else{
-                        indexOf = 0; //找不到时从头开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(0);
                         setErrorTipsMsg("查找： 无法找到文本\""+searchStr+"\"");
@@ -235,7 +221,7 @@ public class ReplacePanel extends JPanel {
     }
 
     /**
-     * 替换字符串
+     * 替换字符串，从上到下
      * @Author lrh
      * @Date 2020/3/15 17:18
      * @Param []
@@ -245,6 +231,7 @@ public class ReplacePanel extends JPanel {
         replaceBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tips.setText(""); //先清空原来的文本
+                boolean replaceFlag = false; //替换标识
                 String sourceStr = inputStr.getText(); //要查询的字符串
                 String targetStr = replaceStr.getText(); //要替换的字符串
                 if(sourceStr.length() == 0){
@@ -260,37 +247,42 @@ public class ReplacePanel extends JPanel {
                 TabCard  tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
-                if(indexOf < 0){
-                    indexOf = 0;
-                }
                 //判断是否已经找到要替换的字符串
-                if(replaceFlag){
+                if(jTextArea.getSelectionStart() == jTextArea.getSelectionEnd()){
+                    //获取选中文本的结束索引位置
+                    indexOf = jTextArea.getSelectionEnd()+1;
+                    if(indexOf >= jTextArea.getText().length()){
+                        indexOf = 0;
+                    }
+                }else{
                     jTextArea.replaceSelection(targetStr);
-                    indexOf = indexOf+targetStr.length();
+                    replaceFlag = true;
                 }
                 int index = jTextArea.getText().indexOf(sourceStr,indexOf);
                 if(index >= 0 ){
-                    indexOf = index;
                     jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                     jTextArea.setSelectionEnd(index+sourceStr.length()); //文本结束选中的位置
-                    replaceFlag = true;
-                    setNormalTipsMsg("替换： 已替换1个匹配项，并找到了下一个");
+                    if(replaceFlag){
+                        setNormalTipsMsg("替换： 已替换1个匹配项，并找到了下一个");
+                    }
                 }else {  //找不到的情况下，再从文件开始位置找一下，防止点击下一个的时候中间出现一次不查询的情况
                     indexOf = 0; //找不到时从头开始查找
                     index = jTextArea.getText().indexOf(sourceStr,indexOf);
                     if(index >=0 ){
-                        indexOf = index;
                         jTextArea.setSelectionStart(index); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(index+sourceStr.length()); //文本结束选中的位置
-                        replaceFlag = true;
-                        setNormalTipsMsg("替换： 已替换1个匹配项，并找到了下一个");
+                        if(replaceFlag){
+                            setNormalTipsMsg("替换： 已替换1个匹配项，并找到了下一个");
+                        }
                     }else{
-                        indexOf = 0; //找不到时从头开始查找
                         jTextArea.setSelectionStart(0); //设置文本开始选中的位置
                         jTextArea.setSelectionEnd(0);
-                        FrameUtils.windowJitter(searchDialog,true);
-                        replaceFlag = false;
-                        setErrorTipsMsg("替换： 没有找到匹配项\""+sourceStr+"\"");
+                        if(replaceFlag){
+                            setNormalTipsMsg("替换： 已替换1个匹配项，没有找到下一个");
+                        }else{
+                            FrameUtils.windowJitter(searchDialog,true);
+                            setErrorTipsMsg("替换： 没有找到匹配项\""+sourceStr+"\"");
+                        }
                     }
                 }
             }
@@ -322,6 +314,8 @@ public class ReplacePanel extends JPanel {
                 TabCard  tabCard = (TabCard)jTabbedPane.getSelectedComponent();
                 final JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
+                jTextArea.setSelectionStart(0);
+                jTextArea.setSelectionEnd(0);
                 final String sourceStr = jTextArea.getText();
                 new Thread(new Runnable() {
                     public void run() {
@@ -336,8 +330,8 @@ public class ReplacePanel extends JPanel {
                                 if(idx == -1){
                                     break;
                                 }
-                                jTextArea.replaceRange(targetStr,index,index + matchStr.length());
-                                index = index + targetStr.length();
+                                jTextArea.replaceRange(targetStr,idx,idx + matchStr.length());
+                                index = idx + targetStr.length();
                             }
                             setNormalTipsMsg("全部替换： 已替换"+count+"个匹配项");
                         }
@@ -451,19 +445,4 @@ public class ReplacePanel extends JPanel {
         this.indexOf = indexOf;
     }
 
-    public boolean isReplaceFlag() {
-        return replaceFlag;
-    }
-
-    public void setReplaceFlag(boolean replaceFlag) {
-        this.replaceFlag = replaceFlag;
-    }
-
-    public boolean isNextReplaceFlag() {
-        return nextReplaceFlag;
-    }
-
-    public void setNextReplaceFlag(boolean nextReplaceFlag) {
-        this.nextReplaceFlag = nextReplaceFlag;
-    }
 }
