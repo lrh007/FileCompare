@@ -343,7 +343,7 @@ public class ComponentListener {
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("查找文件");
-                JTextField inputStr = SearchDialog.getInstance(jFrame).getInputStr();
+                JTextField inputStr = SearchDialog.getInstance(jFrame).getSearchPanel().getInputStr();
                 inputStr.requestFocus(); //输入框获取焦点
                 inputStr.selectAll(); //选中输入框中所有的文本
             }
