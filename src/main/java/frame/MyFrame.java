@@ -3,15 +3,7 @@ package frame;
 import constant.Constants;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.plaf.MenuBarUI;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Scanner;
 
 /**
  * 界面
@@ -40,7 +32,8 @@ public class MyFrame extends JFrame {
         TabCard tabCard = new TabCard();
         String fileName = "new 1";
         tabCard.setFileName(fileName); //初始化文件名称
-        jTabbedPane.addTab(fileName,null,tabCard,fileName); //初始化一个空白选项卡
+
+        jTabbedPane.addTab(fileName,Constants.ICON,tabCard,fileName); //初始化一个空白选项卡
         jTabbedPane.setFont(Constants.FONT);
         ComponentListener.jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
         this.add(jTabbedPane);

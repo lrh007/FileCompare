@@ -1,5 +1,6 @@
 package constant;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -21,6 +22,8 @@ public class Constants {
     public static final String FILE_STATE_SAVE = "已保存";
     public static final String FILE_STATE_EDIT = "编辑";
     public static final String FILE_STATE_UNSAVE = "未保存";
+    /**图标设置**/
+    public static final ImageIcon ICON = new ImageIcon("src/main/resources/images/tabCard.png");
 
 
 

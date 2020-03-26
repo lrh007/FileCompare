@@ -1,6 +1,8 @@
 package frame;
 
 
+import constant.Constants;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -74,7 +76,7 @@ public class ComponentListener {
                 tabCount++; //总个数+1 等于名称
                 String fileName = "new "+tabCount; //新文件名称
                 tabCard.setFileName(fileName); //保存文件名称
-                jTabbedPane.addTab(fileName,null,tabCard,fileName);
+                jTabbedPane.addTab(fileName, Constants.ICON,tabCard,fileName);
                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
                 jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
             }
