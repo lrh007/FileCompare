@@ -10,6 +10,8 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -119,7 +121,7 @@ public class ComponentListener {
                     final TabCard tabCard = new TabCard(); //创建选项卡对象
                     tabCard.setAbsoluteFilePath(file.getAbsolutePath()); //保存文件绝对路径
                     tabCard.setFileName(file.getName());   //保存文件名称（短名称）
-                    jTabbedPane.addTab(file.getName(),null,tabCard,file.getAbsolutePath());
+                    jTabbedPane.addTab(file.getName(),Constants.ICON,tabCard,file.getAbsolutePath());
                     jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
                     //将文件的读取放到一个单独的线程中，防止界面发生卡顿
                     new Thread(new Runnable() {
@@ -351,21 +353,89 @@ public class ComponentListener {
             }
         });
     }
-    /**
-     * 查找和替换文件
+    /**   
+     * 添加拖拽事件监听
      * @Author lrh
-     * @Date 2020/2/6 9:58
-     * @Param []
+     * @Date 2020/3/27 16:38
+     * @Param [jTextArea]
      * @Return void
      */
-    private static void searchFile(){
-        TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
-        JTextArea jTextArea = tabCard.getjTextArea();
-        String str = "liangrh";
-        int index = jTextArea.getText().indexOf(str);
-        jTextArea.setSelectionStart(index); //开始e位置
-        jTextArea.setSelectionEnd(index+str.length()); //结束位置
-//                jTextArea.setSelectedTextColor(Color.BLUE); //选中文本的字体颜色
-        jTextArea.setSelectionColor(Color.GREEN);    //选中文本的背景色
+    public static void dropListener(final JTextArea jTextArea){
+        // 在 textArea 上注册拖拽目标监听器
+        DropTarget dropTarget = new DropTarget(jTextArea, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                boolean isAccept = false;
+                try{
+                    // 1. 文件: 判断拖拽目标是否支持文件列表数据（即拖拽的是否是文件或文件夹, 支持同时拖拽多个）
+                    if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                        // 接收拖拽目标数据
+                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        isAccept = true;
+                        // 以文件集合的形式获取数据
+                        java.util.List<File> files = (java.util.List<File>) dtde.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                        // 把文件路径输出到文本区域
+                        if (files != null && files.size() > 0) {
+                            for (final File file : files) {
+                                final TabCard tabCard = new TabCard(); //创建选项卡对象
+                                tabCard.setAbsoluteFilePath(file.getAbsolutePath()); //保存文件绝对路径
+                                tabCard.setFileName(file.getName());   //保存文件名称（短名称）
+                                jTabbedPane.addTab(file.getName(),Constants.ICON,tabCard,file.getAbsolutePath());
+                                jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+                                //是文件夹就直接显示路径
+                                if(file.isDirectory()){
+                                    tabCard.getjTextArea().append(file.getAbsolutePath());
+                                }else{//是文件就直接读取
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            readFile(file,tabCard.getjTextArea());
+                                        }
+                                    }).start();
+                                }
+                            }
+                        }
+                    }
+                    //2. 文本: 判断拖拽目标是否支持文本数据（即拖拽的是否是文本内容, 或者是否支持以文本的形式获取）
+                    if (dtde.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                        // 接收拖拽目标数据
+                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        isAccept = true;
+                        // 以文本的形式获取数据
+                        String text = dtde.getTransferable().getTransferData(DataFlavor.stringFlavor).toString();
+                        // 输出到文本区域
+                        jTextArea.append("\r\n" + text);
+                    }
+                    /*
+                     * 3. 图片: 判断拖拽目标是否支持图片数据。注意: 拖拽图片不是指以文件的形式拖拽图片文件,
+                     *          而是指拖拽一个正在屏幕上显示的并且支持拖拽的图片（例如网页上显示的图片）。
+                     */
+                   /* if (dtde.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+                        // 接收拖拽目标数据
+                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        isAccept = true;
+                        // 以图片的形式获取数据
+                        Image image = (Image) dtde.getTransferable().getTransferData(DataFlavor.imageFlavor);
+                        // 获取到 image 对象后, 可以对该图片进行相应的操作（例如: 用组件显示、图形变换、保存到本地等）,
+                        // 这里只把图片的宽高输出到文本区域
+                        textArea.append("图片: " + image.getWidth(null) + " * " + image.getHeight(null) + "\n");
+
+                        final TabCard tabCard = new TabCard(); //创建选项卡对象
+                        tabCard.setAbsoluteFilePath(image.get.getAbsolutePath()); //保存文件绝对路径
+                        tabCard.setFileName(file.getName());   //保存文件名称（短名称）
+                        jTabbedPane.addTab(file.getName(),Constants.ICON,tabCard,file.getAbsolutePath());
+                        jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+                    }*/
+                }catch (Exception e){
+                    System.out.println("文件拖拽异常："+e.getMessage());
+                }
+                // 如果此次拖拽的数据是被接受的, 则必须设置拖拽完成（否则可能会看到拖拽目标返回原位置, 造成视觉上以为是不支持拖拽的错误效果）
+                if (isAccept) {
+                    dtde.dropComplete(true);
+                }
+            }
+        }, true);
+        // 如果要移除监听器, 可以调用下面代码
+        // dropTarget.removeDropTargetListener(listener);
     }
 }

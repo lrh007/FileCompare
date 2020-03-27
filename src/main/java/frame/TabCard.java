@@ -52,6 +52,8 @@ public class TabCard extends JPanel {
         fileAttribute = new JLabel("长度：0    行数：1");
         undoManager = new UndoManager();
         init();
+        //添加拖拽事件
+        ComponentListener.dropListener(jTextArea);
     }
     /**
      * 初始化对象属性
