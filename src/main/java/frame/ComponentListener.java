@@ -347,7 +347,13 @@ public class ComponentListener {
         jMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("查找文件");
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                String selectedText = tabCard.getjTextArea().getSelectedText();
                 JTextField inputStr = SearchDialog.getInstance(jFrame).getSearchPanel().getInputStr();
+                //如果显示查找窗口前已经选中文本，就将文本显示到输入框中
+                if(selectedText != null){
+                    inputStr.setText(selectedText);
+                }
                 inputStr.requestFocus(); //输入框获取焦点
                 inputStr.selectAll(); //选中输入框中所有的文本
             }
