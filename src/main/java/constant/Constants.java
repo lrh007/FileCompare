@@ -2,6 +2,7 @@ package constant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 /**
  * 常量类
@@ -23,9 +24,6 @@ public class Constants {
     public static final String FILE_STATE_EDIT = "编辑";
     public static final String FILE_STATE_UNSAVE = "未保存";
     /**图标设置**/
-    public static final ImageIcon ICON = new ImageIcon("src/main/resources/images/tabCard.png");
-    public static final Image IMAGE = Toolkit.getDefaultToolkit().getImage("src/main/resources/images/title.gif");
-
-
-
+    public static final ImageIcon ICON = new ImageIcon(ClassLoader.getSystemResource("images/tabCard.png"));
+    public static final Image IMAGE = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/title.gif"));
 }
