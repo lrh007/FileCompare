@@ -199,7 +199,7 @@ public class ReplacePanel extends JPanel {
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
                 //获取选中文本的结束索引位置
-                indexOf = jTextArea.getSelectionEnd()+1;
+                indexOf = jTextArea.getSelectionEnd();
                 if(indexOf >= jTextArea.getText().length()){
                     indexOf = 0;
                 }
@@ -254,7 +254,7 @@ public class ReplacePanel extends JPanel {
                 //判断是否已经找到要替换的字符串
                 if(jTextArea.getSelectionStart() == jTextArea.getSelectionEnd()){
                     //获取选中文本的结束索引位置
-                    indexOf = jTextArea.getSelectionEnd()+1;
+                    indexOf = jTextArea.getSelectionEnd();
                     if(indexOf >= jTextArea.getText().length()){
                         indexOf = 0;
                     }

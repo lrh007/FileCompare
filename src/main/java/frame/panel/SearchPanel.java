@@ -182,7 +182,7 @@ public class SearchPanel extends JPanel{
                 JTextArea jTextArea = tabCard.getjTextArea();
                 jTextArea.setSelectionColor(Color.green);
                 //获取选中文本的结束索引位置
-                indexOf = jTextArea.getSelectionEnd()+1;
+                indexOf = jTextArea.getSelectionEnd();
                 if(indexOf >= jTextArea.getText().length()){
                     indexOf = 0;
                 }
