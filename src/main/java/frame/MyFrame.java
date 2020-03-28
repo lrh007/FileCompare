@@ -24,6 +24,12 @@ public class MyFrame extends JFrame {
 
     private MyFrame() throws HeadlessException {
         this.setTitle("FileCompare");
+        try { // 使用当前系统的界面风格
+            String lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(lookAndFeel);
+        } catch (Exception e) {
+            System.out.println("系统界面风格设置失败");
+        }
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize(); //获取系统窗口大小
         this.setSize(screenSize);  //设置界面大小
