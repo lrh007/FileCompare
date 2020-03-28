@@ -444,4 +444,34 @@ public class ComponentListener {
         // 如果要移除监听器, 可以调用下面代码
         // dropTarget.removeDropTargetListener(listener);
     }
+
+    /**
+     * 输入框文本字符串修改事件监听，将输入字符串共享给其他组件
+     * 以便于在查找弹出框切换选项卡时，能够在所有的搜索框使用这个字符串
+     * @Author lrh
+     * @Date 2020/3/28 9:41
+     * @Param []
+     * @Return void
+     */
+    public static void inputSearchStrListener(final JTextField inputStr){
+        inputStr.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Constants.SEARCH_STR = inputStr.getText();
+                System.out.println(Constants.SEARCH_STR);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                Constants.SEARCH_STR = inputStr.getText();
+                System.out.println(Constants.SEARCH_STR);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                Constants.SEARCH_STR = inputStr.getText();
+                System.out.println(Constants.SEARCH_STR);
+            }
+        });
+    }
 }

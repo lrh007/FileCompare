@@ -26,4 +26,7 @@ public class Constants {
     /**图标设置**/
     public static final ImageIcon ICON = new ImageIcon(ClassLoader.getSystemResource("images/tabCard.png"));
     public static final Image IMAGE = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/title.gif"));
+    /**查找输入框的字符串，共享给替换等其他组件**/
+    public static String SEARCH_STR = null;
+
 }

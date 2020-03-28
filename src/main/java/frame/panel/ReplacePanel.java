@@ -1,6 +1,7 @@
 package frame.panel;
 
 import constant.Constants;
+import frame.ComponentListener;
 import frame.MyFrame;
 import frame.SearchDialog;
 import frame.TabCard;
@@ -8,6 +9,8 @@ import util.FrameUtils;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -103,6 +106,7 @@ public class ReplacePanel extends JPanel {
         nextActionListener();
         replaceListener();
         replaceAllListener();
+        ComponentListener.inputSearchStrListener(inputStr);
     }
     /**
      * 设置红色的错误提示信息

@@ -90,10 +90,12 @@ public class SearchDialog extends JDialog {
                 //自动选中查找输入框的文本
                 switch (selectedIndex){
                     case 0://查找
+                        searchPanel.getInputStr().setText(Constants.SEARCH_STR);
                         searchPanel.getInputStr().requestFocus();
                         searchPanel.getInputStr().selectAll();
                         break;
                     case 1://替换
+                        replacePanel.getInputStr().setText(Constants.SEARCH_STR);
                         replacePanel.getInputStr().requestFocus();
                         replacePanel.getInputStr().selectAll();
                         break;

@@ -1,6 +1,7 @@
 package frame.panel;
 
 import constant.Constants;
+import frame.ComponentListener;
 import frame.MyFrame;
 import frame.SearchDialog;
 import frame.TabCard;
@@ -88,6 +89,7 @@ public class SearchPanel extends JPanel{
         upActionListener();
         nextActionListener();
         searchCountListener();
+        ComponentListener.inputSearchStrListener(inputStr);
     }
     /**
      * 设置红色的错误提示信息
