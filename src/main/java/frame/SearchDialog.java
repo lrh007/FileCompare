@@ -40,6 +40,7 @@ public class SearchDialog extends JDialog {
     private SearchDialog(JFrame jFrame){
         super(jFrame,"查找");
         Container conn = getContentPane();
+        this.setIconImage(Constants.IMAGE);
         jTabbedPane.addTab("查找",null,searchPanel,null);
         jTabbedPane.addTab("替换",null,replacePanel,null);
 

@@ -2,6 +2,7 @@ package frame;
 
 
 import constant.Constants;
+import game.eatbean.EatBean;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -473,5 +474,28 @@ public class ComponentListener {
                 System.out.println(Constants.SEARCH_STR);
             }
         });
+    }
+
+    /**   
+     * 吃人豆点击事件监听
+     * @Author lrh
+     * @Date 2020/3/28 18:14
+     * @Param [eatBeanMenu]
+     * @Return void
+     */
+    public static void gameEatBeanListener(JMenuItem eatBeanMenu) {
+        eatBeanMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("吃人豆");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EatBean.getINSTANCE();
+                    }
+                }).start();
+            }
+        });
+        
     }
 }

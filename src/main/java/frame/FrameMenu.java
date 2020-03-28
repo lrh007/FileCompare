@@ -1,5 +1,7 @@
 package frame;
 
+import constant.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,6 +22,7 @@ public class FrameMenu {
     private static JMenu searchMenu = new JMenu("搜索(S)");
     private static JMenu viewMenu = new JMenu("视图(V)");
     private static JMenu helpMenu = new JMenu("帮助(H)");
+    private static JMenu gameMenu = new JMenu("游戏(U)");
     private static JMenuItem newFile = new JMenuItem("新建(N)    ");
     private static JMenuItem openFile = new JMenuItem("打开(O)   ");
     private static JMenuItem saveFile = new JMenuItem("保存(S)   ");
@@ -31,7 +34,8 @@ public class FrameMenu {
     private static JMenuItem copyFile = new JMenuItem("复制(C)   ");
     private static JMenuItem pasteFile = new JMenuItem("粘贴(V)  ");
     private static JMenuItem searchFile = new JMenuItem("查找(F)  ");
-    private static Font font = new Font("微软雅黑",Font.PLAIN,18);
+    private static JMenuItem eatBeanMenu = new JMenuItem("吃人豆(E)    ");
+    private static Font font = Constants.FONT;
 
     private FrameMenu() {
     }
@@ -60,6 +64,7 @@ public class FrameMenu {
         jMenuBar.add(searchMenu);
         jMenuBar.add(viewMenu);
         jMenuBar.add(helpMenu);
+        jMenuBar.add(gameMenu);
         /**添加二级菜单**/
         addTwoMenu(jFrame);
     }
@@ -87,6 +92,8 @@ public class FrameMenu {
         editMenu.add(pasteFile);
         /**添加搜索按钮的二级菜单**/
         searchMenu.add(searchFile);
+        /**添加游戏按钮的二级菜单**/
+        gameMenu.add(eatBeanMenu);
         /**添加菜单的快捷键**/
         addHotKey(jFrame);
     }
@@ -109,6 +116,8 @@ public class FrameMenu {
         viewMenu.setMnemonic(KeyEvent.VK_V);
         helpMenu.setFont(font);
         helpMenu.setMnemonic(KeyEvent.VK_H);
+        gameMenu.setFont(font);
+        gameMenu.setMnemonic(KeyEvent.VK_U);
         /**添加文件按钮下面所有子菜单的快捷键**/
         newFile.setFont(font);
         newFile.setMnemonic(KeyEvent.VK_N);
@@ -145,6 +154,10 @@ public class FrameMenu {
         searchFile.setFont(font);
         searchFile.setMnemonic(KeyEvent.VK_F);
         searchFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+        /**添加游戏-吃人豆按钮的快捷键**/
+        eatBeanMenu.setFont(font);
+        eatBeanMenu.setMnemonic(KeyEvent.VK_E);
+        eatBeanMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         /**添加事件监听**/
         addListener(jFrame);
     }
@@ -168,5 +181,6 @@ public class FrameMenu {
         ComponentListener.cutFileListener(cutFile);               //剪切
         ComponentListener.pasteFileListener(pasteFile);           //粘贴
         ComponentListener.searchFileListener(jFrame,searchFile);  //查找文件
+        ComponentListener.gameEatBeanListener(eatBeanMenu);       //吃人豆游戏
     }
 }
