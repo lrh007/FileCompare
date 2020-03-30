@@ -1,9 +1,9 @@
 package frame.panel;
 
 import constant.Constants;
-import frame.ComponentListener;
+import frame.listener.ComponentListener;
 import frame.MyFrame;
-import frame.SearchDialog;
+import frame.dialog.SearchDialog;
 import frame.TabCard;
 import util.FrameUtils;
 
@@ -12,8 +12,6 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

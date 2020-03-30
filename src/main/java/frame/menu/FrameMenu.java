@@ -1,6 +1,7 @@
-package frame;
+package frame.menu;
 
 import constant.Constants;
+import frame.listener.ComponentListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +36,7 @@ public class FrameMenu {
     private static JMenuItem pasteFile = new JMenuItem("粘贴(V)    ");
     private static JMenuItem searchFile = new JMenuItem("查找(F)    ");
     private static JMenuItem replaceFile = new JMenuItem("替换(R)    ");
+    private static JMenuItem aboutUs = new JMenuItem("查看帮助    ");
     private static JMenuItem eatBeanMenu = new JMenuItem("吃人豆(E)    ");
     private static Font font = Constants.FONT;
 
@@ -64,8 +66,8 @@ public class FrameMenu {
         jMenuBar.add(editMenu);
         jMenuBar.add(searchMenu);
         jMenuBar.add(viewMenu);
-        jMenuBar.add(helpMenu);
         jMenuBar.add(gameMenu);
+        jMenuBar.add(helpMenu);
         /**添加二级菜单**/
         addTwoMenu(jFrame);
     }
@@ -94,6 +96,8 @@ public class FrameMenu {
         /**添加搜索按钮的二级菜单**/
         searchMenu.add(searchFile);
         searchMenu.add(replaceFile);
+        /**添加帮助按钮的二级菜单**/
+        helpMenu.add(aboutUs);
         /**添加游戏按钮的二级菜单**/
         gameMenu.add(eatBeanMenu);
         /**添加菜单的快捷键**/
@@ -159,6 +163,8 @@ public class FrameMenu {
         replaceFile.setFont(font);
         replaceFile.setMnemonic(KeyEvent.VK_R);
         replaceFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        /**添加帮助按钮下面所有子菜单的快捷键**/
+        aboutUs.setFont(font);
         /**添加游戏-吃人豆按钮的快捷键**/
         eatBeanMenu.setFont(font);
         eatBeanMenu.setMnemonic(KeyEvent.VK_E);
@@ -188,5 +194,6 @@ public class FrameMenu {
         ComponentListener.searchFileListener(jFrame,searchFile);  //查找文件
         ComponentListener.replaceFileListener(jFrame,replaceFile);//替换文件
         ComponentListener.gameEatBeanListener(eatBeanMenu);       //吃人豆游戏
+        ComponentListener.helpListener(jFrame,aboutUs);           //帮助
     }
 }

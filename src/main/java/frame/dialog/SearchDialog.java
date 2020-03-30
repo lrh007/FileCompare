@@ -1,22 +1,15 @@
-package frame;
+package frame.dialog;
 
 import constant.Constants;
 import frame.panel.ReplacePanel;
 import frame.panel.SearchPanel;
-import util.FrameUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 搜索文件弹出对话框
@@ -112,7 +105,7 @@ public class SearchDialog extends JDialog {
      * @Author lrh
      * @Date 2020/3/10 17:28
      * @Param []
-     * @Return frame.SearchDialog
+     * @Return frame.dialog.SearchDialog
      */
     public static SearchDialog getInstance(JFrame jFrame){
         if(INSTANCE == null){
@@ -125,7 +118,7 @@ public class SearchDialog extends JDialog {
      * @Author lrh
      * @Date 2020/3/15 14:56
      * @Param []
-     * @Return frame.SearchDialog
+     * @Return frame.dialog.SearchDialog
      */
     public static SearchDialog getInstance(){
         if(INSTANCE == null){

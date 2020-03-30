@@ -1,22 +1,21 @@
-package frame;
+package frame.listener;
 
 
 import constant.Constants;
+import frame.MyFrame;
+import frame.TabCard;
+import frame.dialog.SearchDialog;
 import game.eatbean.EatBean;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -96,7 +95,7 @@ public class ComponentListener {
                     int line = jTextArea.getLineOfOffset(offSet);
                     int lineStartOffset = jTextArea.getLineStartOffset(line); //行开始位置
                     int lineEndOffset = jTextArea.getLineEndOffset(line); //行结束位置
-                    System.out.println("第 "+(line+1)+" 行,开始位置："+0+",结束位置："+(offSet-lineStartOffset));
+//                    System.out.println("第 "+(line+1)+" 行,开始位置："+0+",结束位置："+(offSet-lineStartOffset));
                     tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),(line+1),(offSet-lineStartOffset));
                 } catch (BadLocationException ex) {
                     System.out.println("选中文本时查找、改变行颜色异常："+ex.getMessage());
@@ -565,6 +564,22 @@ public class ComponentListener {
                 }
                 inputStr.requestFocus(); //输入框获取焦点
                 inputStr.selectAll(); //选中输入框中所有的文本
+            }
+        });
+    }
+    /**   
+     * 帮助按钮事件监听
+     * @Author lrh
+     * @Date 2020/3/30 16:19
+     * @Param [jFrame, aboutUs]
+     * @Return void
+     */
+    public static void helpListener(JFrame jFrame, JMenuItem aboutUs) {
+        aboutUs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("点击帮助按钮");
+                JOptionPane.showMessageDialog(jFrame,"功能更新中，敬请期待！","帮助",JOptionPane.INFORMATION_MESSAGE,Constants.INFOMATION);
             }
         });
     }

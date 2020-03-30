@@ -1,6 +1,8 @@
 package frame;
 
 import constant.Constants;
+import frame.listener.ComponentListener;
+import frame.menu.FrameMenu;
 
 import javax.swing.*;
 import java.awt.*;
