@@ -5,10 +5,10 @@ import constant.Constants;
 import game.eatbean.EatBean;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
+import javax.swing.event.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -61,6 +61,44 @@ public class ComponentListener {
         jTextArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             public void undoableEditHappened(UndoableEditEvent e) {
                 undoManager.addEdit(e.getEdit());
+            }
+        });
+        //选中文本时查找相同的字符串
+        jTextArea.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                String selectedText = jTextArea.getSelectedText();
+               /* if(selectedText !=null && selectedText.length()>0){
+                    System.out.println("选中文本");
+                    //查找全部的字符串并且高亮
+                    int index = 0;
+                    try {
+                        Highlighter h = jTextArea.getHighlighter();
+                        DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+                        while(true){
+                            int idx = jTextArea.getText().indexOf(selectedText,index);
+                            if(idx == -1){
+                                break;
+                            }
+                            //选中文本的开始和结束位置
+                            index = idx+selectedText.length();
+                            //高亮字符串
+                            Object o = h.addHighlight(idx, index, painter);
+                        }
+                    } catch (BadLocationException ex) {
+                        System.out.println("选中文本时查找、改变行颜色异常："+ex.getMessage());
+                    }
+                }*/
+                //使鼠标所在行变色
+                int offSet = e.getDot(); //获得插入符的位置
+                try {
+                    int line = jTextArea.getLineOfOffset(offSet);
+                    int lineStartOffset = jTextArea.getLineStartOffset(line); //行开始位置
+                    int lineEndOffset = jTextArea.getLineEndOffset(line); //行结束位置
+                    System.out.println("第 "+line+" 行,开始位置："+0+",结束位置："+(lineEndOffset-lineStartOffset));
+                } catch (BadLocationException ex) {
+                    System.out.println("选中文本时查找、改变行颜色异常："+ex.getMessage());
+                }
             }
         });
     }
