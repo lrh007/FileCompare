@@ -44,6 +44,7 @@ public class ComponentListener {
      * @Return void
      */
     public static void jTextAreaListener(JTextArea jTextArea, final UndoManager undoManager){
+        TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
         jTextArea.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 System.out.println("输入数据");
@@ -95,7 +96,8 @@ public class ComponentListener {
                     int line = jTextArea.getLineOfOffset(offSet);
                     int lineStartOffset = jTextArea.getLineStartOffset(line); //行开始位置
                     int lineEndOffset = jTextArea.getLineEndOffset(line); //行结束位置
-                    System.out.println("第 "+line+" 行,开始位置："+0+",结束位置："+(lineEndOffset-lineStartOffset));
+                    System.out.println("第 "+(line+1)+" 行,开始位置："+0+",结束位置："+(offSet-lineStartOffset));
+                    tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),(line+1),(offSet-lineStartOffset));
                 } catch (BadLocationException ex) {
                     System.out.println("选中文本时查找、改变行颜色异常："+ex.getMessage());
                 }
@@ -193,6 +195,8 @@ public class ComponentListener {
                 byteBuffer.clear();
             }
             fileChannel.close();
+            TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+            tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),0,0);
             System.out.println("读取数据一共："+jTextArea.getLineCount()+" 条，耗时："+(System.currentTimeMillis()-startTime)+" ms");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,"未找到文件");
@@ -235,7 +239,6 @@ public class ComponentListener {
                 String text = jTextArea.getText(); //获取当前所有的文件内容
                 int selectedIndex = jTabbedPane.getSelectedIndex(); //获取当前选中的tab卡的索引
                 try{
-
                     if(tabCard.getAbsoluteFilePath() == null){ //当前文件是新建的文件
                         //打开文件选择框
                         JFileChooser jFileChooser = new JFileChooser();
@@ -286,7 +289,8 @@ public class ComponentListener {
                     fileChannel.close();
                     byteBuffer.clear();
                     JOptionPane.showMessageDialog(null,"保存成功");
-
+                    TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                    tabCard.setFileArrtibute(tabCard.getjTextArea().getText().length(),tabCard.getjTextArea().getLineCount(),0,0);
                 }catch (Exception ex){
                     throw new RuntimeException("保存文件异常",ex);
                 }
@@ -389,6 +393,8 @@ public class ComponentListener {
                 TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
                 String selectedText = tabCard.getjTextArea().getSelectedText();
                 JTextField inputStr = SearchDialog.getInstance(jFrame).getSearchPanel().getInputStr();
+                //默认选中搜索选项卡
+                SearchDialog.getInstance(jFrame).getjTabbedPane().setSelectedIndex(0);
                 //如果显示查找窗口前已经选中文本，就将文本显示到输入框中
                 if(selectedText != null){
                     inputStr.setText(selectedText);
@@ -535,5 +541,31 @@ public class ComponentListener {
             }
         });
         
+    }
+    /**   
+     * 替换文件事件监听
+     * @Author lrh
+     * @Date 2020/3/30 15:48
+     * @Param [replaceFile]
+     * @Return void
+     */
+    public static void replaceFileListener(JFrame jFrame,JMenuItem replaceFile) {
+        replaceFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("替换文件对话框");
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                String selectedText = tabCard.getjTextArea().getSelectedText();
+                JTextField inputStr = SearchDialog.getInstance(jFrame).getReplacePanel().getInputStr();
+                //默认选中替换选项卡
+                SearchDialog.getInstance(jFrame).getjTabbedPane().setSelectedIndex(1);
+                //如果显示查找窗口前已经选中文本，就将文本显示到输入框中
+                if(selectedText != null){
+                    inputStr.setText(selectedText);
+                }
+                inputStr.requestFocus(); //输入框获取焦点
+                inputStr.selectAll(); //选中输入框中所有的文本
+            }
+        });
     }
 }
