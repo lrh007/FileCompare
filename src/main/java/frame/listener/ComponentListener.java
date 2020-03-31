@@ -189,6 +189,7 @@ public class ComponentListener {
     private static void readFile(File file,JTextArea jTextArea){
         try {
             long startTime = System.currentTimeMillis();
+            TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
             jTextArea.setText(null);
             FileChannel fileChannel = new FileInputStream(file).getChannel();
             ByteBuffer byteBuffer = ByteBuffer.allocate(1048576);  //每次读取1M
@@ -196,11 +197,10 @@ public class ComponentListener {
             while((len = fileChannel.read(byteBuffer))!=-1){
                 jTextArea.append(new String(byteBuffer.array(),0,len,"UTF-8"));
                 byteBuffer.clear();
+                tabCard.getLineNumberHeaderView().asynRepaint();
             }
             fileChannel.close();
-            TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
             tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),0,0);
-            tabCard.getLineNumberHeaderView().asynRepaint();
             System.out.println("读取数据一共："+jTextArea.getLineCount()+" 条，耗时："+(System.currentTimeMillis()-startTime)+" ms");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,"未找到文件");
