@@ -1,6 +1,11 @@
 package frame;
 
+import constant.Constants;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 
 import static java.awt.Font.*;
 
@@ -14,76 +19,69 @@ import static java.awt.Font.*;
  */
 public class LineNumberHeaderView extends javax.swing.JComponent {
 
-    /**
-     * JAVA TextArea行数显示插件
-     */
     private static final long serialVersionUID = 1L;
-    private final  Font DEFAULT_FONT = new Font("微软雅黑", PLAIN, 18);
-    public final Color DEFAULT_BACKGROUD = new Color(228, 228, 228);
-    public final Color DEFAULT_FOREGROUD = Color.BLACK;
-    public final int nHEIGHT = Integer.MAX_VALUE - 1000000;
-    public final int MARGIN = 5;
-    private int lineHeight;
-    private int fontLineHeight;
-    private int currentRowWidth;
-    private FontMetrics fontMetrics;
+    private Font font = new Font("微软雅黑",Font.PLAIN,18);
+    private static AffineTransform atf = new AffineTransform();
+    private static FontRenderContext frc = new FontRenderContext(atf, true,true);
+    private LineNumberHeaderView instance = this;
+    private JTextArea jTextArea;
 
-    public LineNumberHeaderView() {
-        setFont(DEFAULT_FONT);
-        setForeground(DEFAULT_FOREGROUD);
-        setBackground(DEFAULT_BACKGROUD);
-        setPreferredSize(9999);
+    public LineNumberHeaderView(){
+
     }
-
-    public void setPreferredSize(int row) {
-        int width = fontMetrics.stringWidth(String.valueOf(row));
-        if (currentRowWidth < width) {
-            currentRowWidth = width;
-            setPreferredSize(new Dimension(2 * MARGIN + width + 1, nHEIGHT));
-        }
+    public LineNumberHeaderView(JTextArea jTextArea) {
+        this.setFont(font);
+        this.setForeground(Color.gray);
+        this.setBackground(new Color(228, 228, 228));
+        this.jTextArea = jTextArea;
+        setPreferredSize((int) font.getStringBounds(String.valueOf(jTextArea.getLineCount()),frc).getWidth(),30);
     }
-
-    @Override
-    public void setFont(Font font) {
-        super.setFont(font);
-        fontMetrics = getFontMetrics(getFont());
-        fontLineHeight = fontMetrics.getHeight();
+    /**
+     * 设置组件的大小
+     * @Author lrh
+     * @Date 2020/3/31 10:13
+     * @Param [width, height]
+     * @Return void
+     */
+    public void setPreferredSize(int width,int height){
+        this.setPreferredSize(new Dimension(width+40,height));
     }
-
-    public int getLineHeight() {
-        if (lineHeight == 0) {
-            return fontLineHeight;
-        }
-        return lineHeight;
-    }
-
-    public void setLineHeight(int lineHeight) {
-        if (lineHeight > 0) {
-            this.lineHeight = lineHeight;
-        }
-    }
-
-    public int getStartOffset() {
-        return 1;
-    }
-
+    /**   
+     * 绘制组件行数
+     * @Author lrh
+     * @Date 2020/3/31 10:15
+     * @Param [g]
+     * @Return void
+     */
     @Override
     protected void paintComponent(Graphics g) {
-        int nlineHeight = getLineHeight();
-        int startOffset = getStartOffset();
-        Rectangle drawHere = g.getClipBounds();
-        g.setColor(getBackground());
-        g.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
-        g.setColor(getForeground());
-        int startLineNum = (drawHere.y / nlineHeight) + 1;
-        int endLineNum = startLineNum + (drawHere.height / nlineHeight);
-        int start = (drawHere.y / nlineHeight) * nlineHeight + nlineHeight - startOffset;
-        for (int i = startLineNum; i <= endLineNum; ++i) {
-            String lineNum = String.valueOf(i);
-            int width = fontMetrics.stringWidth(lineNum);
-            g.drawString(lineNum + " ", MARGIN + currentRowWidth - width - 1, start);
-            start += nlineHeight;
+        int lineCount = jTextArea.getLineCount();
+        //初始化字符串位置
+        int x = 20;
+        int y = 20;
+        g.drawString("1",x,y);
+        for(int i=2;i <= lineCount;i++){
+            y+=font.getStringBounds(String.valueOf(i),frc).getHeight()+1;
+            g.drawString(String.valueOf(i),x,y);
         }
-        setPreferredSize(endLineNum);
+        //设置组件宽度和高度
+        setPreferredSize((int) font.getStringBounds(String.valueOf(lineCount),frc).getWidth(),lineCount*60);
+        System.out.println("重新绘制组件");
+    }
+    /***
+     * 异步刷新页面
+     * @Author lrh
+     * @Date 2020/3/31 15:11
+     * @Param []
+     * @Return void
+     */
+    public void asynRepaint(){
+        instance.repaint();
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                instance.repaint();
+            }
+        }).start();*/
     }
 }

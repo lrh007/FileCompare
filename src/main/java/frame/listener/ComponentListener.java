@@ -2,6 +2,7 @@ package frame.listener;
 
 
 import constant.Constants;
+import frame.LineNumberHeaderView;
 import frame.MyFrame;
 import frame.TabCard;
 import frame.dialog.SearchDialog;
@@ -47,14 +48,17 @@ public class ComponentListener {
         jTextArea.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 System.out.println("输入数据");
+                tabCard.getLineNumberHeaderView().asynRepaint();
             }
 
             public void removeUpdate(DocumentEvent e) {
                 System.out.println("删除数据");
+                tabCard.getLineNumberHeaderView().asynRepaint();
             }
 
             public void changedUpdate(DocumentEvent e) {
                 System.out.println("更新数据");
+                tabCard.getLineNumberHeaderView().asynRepaint();
             }
         });
         //添加撤销/恢复事件监听
@@ -196,6 +200,7 @@ public class ComponentListener {
             fileChannel.close();
             TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
             tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),0,0);
+            tabCard.getLineNumberHeaderView().asynRepaint();
             System.out.println("读取数据一共："+jTextArea.getLineCount()+" 条，耗时："+(System.currentTimeMillis()-startTime)+" ms");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,"未找到文件");
@@ -290,6 +295,7 @@ public class ComponentListener {
                     JOptionPane.showMessageDialog(null,"保存成功");
                     TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
                     tabCard.setFileArrtibute(tabCard.getjTextArea().getText().length(),tabCard.getjTextArea().getLineCount(),0,0);
+                    tabCard.getLineNumberHeaderView().asynRepaint();
                 }catch (Exception ex){
                     throw new RuntimeException("保存文件异常",ex);
                 }

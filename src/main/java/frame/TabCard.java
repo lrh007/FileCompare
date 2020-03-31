@@ -28,6 +28,8 @@ public class TabCard extends JPanel {
     private JLabel fileState;
     //文件属性
     private JLabel fileAttribute;
+    //显示行号的组件
+    private LineNumberHeaderView lineNumberHeaderView;
 
     //文件绝对路径
     private String absoluteFilePath;
@@ -48,9 +50,10 @@ public class TabCard extends JPanel {
         jTextArea = new JTextArea(20,20);
         jScrollPane = new JScrollPane(jTextArea);
         jToolBar = new JToolBar();
-        fileState = new JLabel("文件状态："+Constants.FILE_STATE_UNSAVE+"    ");
+        fileState = new JLabel("文件状态："+Constants.FILE_STATE_EDIT+"    ");
         fileAttribute = new JLabel("    长度：0    总行数：1    行数：1    列数：0");
         undoManager = new UndoManager();
+        lineNumberHeaderView = new LineNumberHeaderView(jTextArea);
         init();
         //添加拖拽事件
         ComponentListener.dropListener(jTextArea);
@@ -64,7 +67,7 @@ public class TabCard extends JPanel {
      */
     private void init(){
         jTextArea.setFont(Constants.FONT);   // 设置字体
-        jScrollPane.setRowHeaderView(new LineNumberHeaderView());
+        jScrollPane.setRowHeaderView(lineNumberHeaderView);
         this.setLayout(new BorderLayout(1,2));  //布局管理，这里一定要设置，否则会不显示
         jToolBar.setFloatable(false);  //设置为不可移动
         jToolBar.add(fileState);
@@ -144,5 +147,9 @@ public class TabCard extends JPanel {
 
     public void setUndoManager(UndoManager undoManager) {
         this.undoManager = undoManager;
+    }
+
+    public LineNumberHeaderView getLineNumberHeaderView() {
+        return lineNumberHeaderView;
     }
 }
