@@ -32,7 +32,6 @@ public class LineNumberHeaderView extends javax.swing.JComponent {
     public LineNumberHeaderView(JTextArea jTextArea) {
         this.setFont(font);
         this.setForeground(Color.gray);
-        this.setBackground(new Color(228, 228, 228));
         this.jTextArea = jTextArea;
         setPreferredSize((int) font.getStringBounds(String.valueOf(jTextArea.getLineCount()),frc).getWidth(),30);
     }
@@ -58,9 +57,8 @@ public class LineNumberHeaderView extends javax.swing.JComponent {
         int lineCount = jTextArea.getLineCount();
         //初始化字符串位置
         int x = 20;
-        int y = 20;
-        g.drawString("1",x,y);
-        for(int i=2;i <= lineCount;i++){
+        int y = 0;
+        for(int i=1;i <= lineCount;i++){
             y+=font.getStringBounds(String.valueOf(i),frc).getHeight()+1;
             g.drawString(String.valueOf(i),x,y);
         }
