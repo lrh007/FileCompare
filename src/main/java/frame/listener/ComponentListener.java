@@ -438,6 +438,7 @@ public class ComponentListener {
                                 tabCard.setFileName(file.getName());   //保存文件名称（短名称）
                                 jTabbedPane.addTab(file.getName(),Constants.ICON,tabCard,file.getAbsolutePath());
                                 jTabbedPane.setSelectedComponent(tabCard);  //选中当前选项卡
+                                jTextAreaListener(tabCard.getjTextArea(),tabCard.getUndoManager()); //添加事件监听
                                 //是文件夹就直接显示路径
                                 if(file.isDirectory()){
                                     tabCard.getjTextArea().append(file.getAbsolutePath());
@@ -461,6 +462,8 @@ public class ComponentListener {
                         String text = dtde.getTransferable().getTransferData(DataFlavor.stringFlavor).toString();
                         // 输出到文本区域
                         jTextArea.append("\r\n" + text);
+                        TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                        tabCard.setFileArrtibute(jTextArea.getText().length(),jTextArea.getLineCount(),0,0);
                     }
                     /*
                      * 3. 图片: 判断拖拽目标是否支持图片数据。注意: 拖拽图片不是指以文件的形式拖拽图片文件,
@@ -489,6 +492,8 @@ public class ComponentListener {
                 if (isAccept) {
                     dtde.dropComplete(true);
                 }
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                tabCard.getLineNumberHeaderView().asynRepaint();
             }
         }, true);
         // 如果要移除监听器, 可以调用下面代码
