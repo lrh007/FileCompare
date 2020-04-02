@@ -594,4 +594,23 @@ public class ComponentListener {
             }
         });
     }
+    /**
+     * 定位文件事件监听
+     * @Author lrh
+     * @Date 2020/4/2 16:44
+     * @Param [jFrame, locationFile]
+     * @Return void
+     */
+    public static void locationFileListener(JFrame jFrame, JMenuItem locationFile) {
+        locationFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("替换文件对话框");
+                TabCard tabCard = (TabCard) jTabbedPane.getSelectedComponent();
+                String selectedText = tabCard.getjTextArea().getSelectedText();
+                //默认选中定位选项卡
+                SearchDialog.getInstance(jFrame).getjTabbedPane().setSelectedIndex(2);
+            }
+        });
+    }
 }

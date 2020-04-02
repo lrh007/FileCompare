@@ -36,6 +36,7 @@ public class FrameMenu {
     private static JMenuItem pasteFile = new JMenuItem("粘贴(V)    ");
     private static JMenuItem searchFile = new JMenuItem("查找(F)    ");
     private static JMenuItem replaceFile = new JMenuItem("替换(R)    ");
+    private static JMenuItem locationFile = new JMenuItem("定位(G)    ");
     private static JMenuItem aboutUs = new JMenuItem("查看帮助    ");
     private static JMenuItem eatBeanMenu = new JMenuItem("吃人豆(E)    ");
     private static Font font = Constants.FONT;
@@ -96,6 +97,7 @@ public class FrameMenu {
         /**添加搜索按钮的二级菜单**/
         searchMenu.add(searchFile);
         searchMenu.add(replaceFile);
+        searchMenu.add(locationFile);
         /**添加帮助按钮的二级菜单**/
         helpMenu.add(aboutUs);
         /**添加游戏按钮的二级菜单**/
@@ -163,6 +165,9 @@ public class FrameMenu {
         replaceFile.setFont(font);
         replaceFile.setMnemonic(KeyEvent.VK_R);
         replaceFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        locationFile.setFont(font);
+        locationFile.setMnemonic(KeyEvent.VK_G);
+        locationFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
         /**添加帮助按钮下面所有子菜单的快捷键**/
         aboutUs.setFont(font);
         /**添加游戏-吃人豆按钮的快捷键**/
@@ -193,6 +198,7 @@ public class FrameMenu {
         ComponentListener.pasteFileListener(pasteFile);           //粘贴
         ComponentListener.searchFileListener(jFrame,searchFile);  //查找文件
         ComponentListener.replaceFileListener(jFrame,replaceFile);//替换文件
+        ComponentListener.locationFileListener(jFrame,locationFile);//定位文件
         ComponentListener.gameEatBeanListener(eatBeanMenu);       //吃人豆游戏
         ComponentListener.helpListener(jFrame,aboutUs);           //帮助
     }

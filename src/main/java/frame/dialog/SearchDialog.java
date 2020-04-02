@@ -1,6 +1,7 @@
 package frame.dialog;
 
 import constant.Constants;
+import frame.panel.LocationPanel;
 import frame.panel.ReplacePanel;
 import frame.panel.SearchPanel;
 
@@ -25,6 +26,8 @@ public class SearchDialog extends JDialog {
     private SearchPanel searchPanel = new SearchPanel(this);
     /**替换面板对象**/
     private ReplacePanel replacePanel = new ReplacePanel(this);
+    /**定位文本面板对象**/
+    private LocationPanel locationPanel = new LocationPanel(this);
     /**选项卡面板放置组件**/
     private JTabbedPane jTabbedPane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
     private SearchDialog(){
@@ -36,6 +39,7 @@ public class SearchDialog extends JDialog {
         this.setIconImage(Constants.IMAGE);
         jTabbedPane.addTab("查找",null,searchPanel,null);
         jTabbedPane.addTab("替换",null,replacePanel,null);
+        jTabbedPane.addTab("定位",null,locationPanel,null);
 
         conn.add(jTabbedPane);
         this.setSize(680,400);
@@ -159,5 +163,13 @@ public class SearchDialog extends JDialog {
 
     public void setjTabbedPane(JTabbedPane jTabbedPane) {
         this.jTabbedPane = jTabbedPane;
+    }
+
+    public LocationPanel getLocationPanel() {
+        return locationPanel;
+    }
+
+    public void setLocationPanel(LocationPanel locationPanel) {
+        this.locationPanel = locationPanel;
     }
 }
